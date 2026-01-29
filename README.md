@@ -5,7 +5,7 @@ Hãy tải git thông qua link này https://git-scm.com/install/windows hoặc l
 
 Khi mà tải xong thì bạn nên clone dự án từ project này bằng cách nhập dòng code sau:
 ```
-git clone <url>
+git clone https://github.com/LoveEnglish1111/Frontend.git
 ```
 
 
