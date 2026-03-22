@@ -1,7 +1,8 @@
 import { IoHomeSharp } from "react-icons/io5";
 import { FaBookOpen, FaPerson, FaShield } from "react-icons/fa6";
 import { MdPeopleAlt } from "react-icons/md";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import Sidebar, {SidebarItem} from "./components/Sidebar";
 
 function App() {
 	const SlideBar = [
@@ -36,30 +37,15 @@ function App() {
 		},
 	]
 
+	const location = useLocation();
+	console.log(location.pathname);
   	return (
     	<div className="flex w-screen h-screen bg-background">
-			{/* Sidebar */}
-			<div className="flex flex-col w-[175px] h-full bg-sidebar border-r-[1px] border-sidebar-border">
-				<div className="flex flex-col justify-center items-center flex-[1] border-b-[1px] border-b-sidebar-border">
-					<h1 className="font-bold text-sidebar-primary">LOVE ENGLISH</h1>
-					<p className="text-[12px]">Learn Together</p>
-				</div>
-				<div className="flex flex-col items-center flex-[8] border-b-[1px] border-b-sidebar-border mt-[10px]">
-					{
-						SlideBar.map((page) => (
-							<Link to={page.Link} className="flex items-center w-[80%] h-[30px] hover:bg-gray-200 text-gray-700 rounded-[5px] cursor-pointer">
-								<div className="ml-[10px]">
-									{page.Icon}
-								</div>
-								<span className="ml-[5px]">{page.Name}</span>
-							</Link>
-					))}
-				</div>
-				<div className="flex-[1]">
-
-				</div>
-			</div>
-
+			<Sidebar>
+				{SlideBar.map((page) => (		
+					<SidebarItem icon={page.Icon} text={page.Name} to={page.Link} active={location.pathname == page.Link}/>
+				))}
+			</Sidebar>
 			<Outlet/>
     	</div>
   	)

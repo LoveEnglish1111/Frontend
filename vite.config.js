@@ -9,11 +9,5 @@ export default defineConfig({
 		tailwindcss(),
 	],
 
-	theme: {
-    extend: {
-      colors: {
-        primary: '#2563eb',
-      },
-    },
-  },
+  publicDir: "static"
 });
