@@ -1,10 +1,26 @@
-import Button from "./Button";
+import { useNavigate } from "react-router-dom";
+import { BookOpen, Users, Zap, User } from "lucide-react";
 
-export default function WelcomeCard({ userName = "John" }) {
+export default function WelcomeCard({ currentUser }) {
+  const navigate = useNavigate();
+
+  const userName = currentUser?.name || "there";
+
   const currentHour = new Date().getHours();
   let greeting = "Good Morning";
   if (currentHour >= 12 && currentHour < 18) greeting = "Good Afternoon";
   if (currentHour >= 18) greeting = "Good Evening";
+
+  const quickActions = [
+    { label: 'Study Sets', icon: BookOpen, path: '/StudySets' },
+    { label: 'Community', icon: Users, path: '/Community' },
+    { label: 'Today Quiz', icon: Zap, path: '/StudySets?tab=daily' },
+    { label: 'Profile', icon: User, path: '/Profile' },
+  ];
+
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
 
   return (
     <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl p-8 text-white shadow-lg overflow-hidden relative">
@@ -15,11 +31,11 @@ export default function WelcomeCard({ userName = "John" }) {
       <div className="relative z-10">
         {/* Greeting */}
         <h2 className="text-3xl font-bold mb-2">{greeting}, {userName}! 👋</h2>
-        <p className="text-blue-100 text-lg mb-6">
+        <p className="text-blue-100 text-lg mb-8">
           Welcome back to ELSN. Ready to continue your English learning journey?
         </p>
 
-        {/* CTA Buttons */}
+        {/* Quick Navigation Buttons */}
         <div className="flex gap-3 flex-wrap">
           <Button
             variant="primary"

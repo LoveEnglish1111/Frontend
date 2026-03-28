@@ -38,6 +38,7 @@ createRoot(document.getElementById('root')).render(
 							<App/>
 						</ProtectedRoute>
 					}>
+fix/study-quiz-buttons
 						<Route path='/' element={<Home/>}></Route>
 						<Route path='/StudySets' element={<StudySets/>}></Route>
 						<Route path='/StudySets/study/:setId' element={<StudyMode/>}></Route>
@@ -45,6 +46,12 @@ createRoot(document.getElementById('root')).render(
 						<Route path='/Community' element={<Community/>}></Route>
 						<Route path='/Profile' element={<Profile/>}></Route>
 						<Route path='/AdminPanel' element={<AdminPanel/>}></Route>
+						<Route index element={<Home/>} />
+						<Route path='StudySets' element={<StudySets/>} />
+						<Route path='Community' element={<Community/>} />
+						<Route path='Profile' element={<Profile/>} />
+						<Route path='AdminPanel' element={<AdminPanel/>} />
+ main
 					</Route>
 				</Routes>
 			</AuthProvider>

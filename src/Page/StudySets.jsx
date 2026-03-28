@@ -29,10 +29,17 @@ import { Plus, Search } from 'lucide-react';
 import Button from '../components/Button';
 import StudySetCard from '../components/StudySetCard';
 import Input from '../components/Input';
+ fix/study-quiz-buttons
 import { useNavigate } from 'react-router-dom';
+
+import axios from 'axios';
+
+ main
 export default function StudySets() {
+  const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+ fix/study-quiz-buttons
   const navigate = useNavigate();
   // Mock study sets data
   const mockStudySets = [
@@ -110,6 +117,24 @@ export default function StudySets() {
     },
   ];
 
+  // Check for ?tab=daily query param on mount
+  useEffect(() => {
+    if (searchParams.get('tab') === 'daily') {
+      setSelectedCategory('Daily');
+    }
+  }, [searchParams]);
+
+  const [mockStudySets, setmockStudySets] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await axios.get("http://localhost:1111/StudySets");
+      setmockStudySets(res.data);
+    };
+
+    fetchData();
+  }, []);
+ main
+
   const categories = ['All', 'Grammar', 'Vocabulary', 'Phrasal', 'IELTS', 'Business', 'Daily'];
 
   // Filter study sets
@@ -133,6 +158,7 @@ export default function StudySets() {
   const handleCreateNew = () => {
     // TODO: Open create set modal
     console.log('Create new study set');
+    getMockStudySets();
   };
 
   return (
