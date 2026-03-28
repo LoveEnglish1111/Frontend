@@ -22,9 +22,9 @@ export default function WelcomeCard({ userName = "John" }) {
         {/* CTA Buttons */}
         <div className="flex gap-3 flex-wrap">
           <Button
-            variant="primary"
+            variant="outline"
             size="md"
-            className="bg-white text-primary-600 hover:bg-blue-50"
+            className="border-white text-white hover:bg-white hover:bg-opacity-10"
           >
             Start Learning
           </Button>
