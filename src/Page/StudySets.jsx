@@ -29,11 +29,11 @@ import { Plus, Search } from 'lucide-react';
 import Button from '../components/Button';
 import StudySetCard from '../components/StudySetCard';
 import Input from '../components/Input';
-
+import { useNavigate } from 'react-router-dom';
 export default function StudySets() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
-
+  const navigate = useNavigate();
   // Mock study sets data
   const mockStudySets = [
     {
@@ -123,13 +123,11 @@ export default function StudySets() {
   });
 
   const handleStudyClick = (setId) => {
-    // TODO: Navigate to study mode or open study modal
-    console.log('Study set:', setId);
+    navigate(`/StudySets/study/${setId}`);
   };
 
   const handleQuizClick = (setId) => {
-    // TODO: Navigate to quiz mode or open quiz modal
-    console.log('Quiz set:', setId);
+    navigate(`/StudySets/quiz/${setId}`);
   };
 
   const handleCreateNew = () => {
