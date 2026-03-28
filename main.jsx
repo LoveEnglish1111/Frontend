@@ -18,6 +18,8 @@ import StudySets from './src/Page/StudySets.jsx';
 import Community from './src/Page/Community.jsx';
 import Profile from './src/Page/Profile.jsx';
 import AdminPanel from './src/Page/AdminPanel.jsx';
+import StudyMode from './src/Page/StudyMode.jsx';
+import QuizPage from './src/Page/QuizPage.jsx';
 
 createRoot(document.getElementById('root')).render(
   	<StrictMode>
@@ -36,11 +38,20 @@ createRoot(document.getElementById('root')).render(
 							<App/>
 						</ProtectedRoute>
 					}>
+fix/study-quiz-buttons
+						<Route path='/' element={<Home/>}></Route>
+						<Route path='/StudySets' element={<StudySets/>}></Route>
+						<Route path='/StudySets/study/:setId' element={<StudyMode/>}></Route>
+						<Route path='/StudySets/quiz/:setId' element={<QuizPage/>}></Route>
+						<Route path='/Community' element={<Community/>}></Route>
+						<Route path='/Profile' element={<Profile/>}></Route>
+						<Route path='/AdminPanel' element={<AdminPanel/>}></Route>
 						<Route index element={<Home/>} />
 						<Route path='StudySets' element={<StudySets/>} />
 						<Route path='Community' element={<Community/>} />
 						<Route path='Profile' element={<Profile/>} />
 						<Route path='AdminPanel' element={<AdminPanel/>} />
+ main
 					</Route>
 				</Routes>
 			</AuthProvider>

@@ -1,13 +1,128 @@
-import { useState, useEffect } from 'react';
+// import UserFlashcard from "../components/Flashcard/UserFlashcard";
+
+// function StudySets() {
+//     const DataVocabulary = [
+//         {
+//             wordCount : 10,
+//             title : "Từ Vựng Cơ Bản",
+//             ID : "111"
+//         },
+//         {
+//             wordCount : 50,
+//             title : "Từ Vựng Đời Sống",
+//             ID : "222"
+//         }
+//     ]
+//     return (
+//         <div className="ml-[20px] mt-[50px] w-[800px]">
+//             <h1 className="font-bold text-[25px] mb-[20px] border-b-[1px] border-b-gray-300">Từ Vựng Của Bạn</h1>
+//             {
+//                 DataVocabulary.map((data) => (
+//                     <UserFlashcard wordCount = {data.wordCount} title = {data.title}/>
+//                 ))
+//             }
+//         </div>
+//     )
+// }
+import { useState } from 'react';
 import { Plus, Search } from 'lucide-react';
 import Button from '../components/Button';
 import StudySetCard from '../components/StudySetCard';
 import Input from '../components/Input';
+ fix/study-quiz-buttons
+import { useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
 
+ main
 export default function StudySets() {
+  const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+ fix/study-quiz-buttons
+  const navigate = useNavigate();
+  // Mock study sets data
+  const mockStudySets = [
+    {
+      id: 1,
+      title: 'Phrasal Verbs Advanced',
+      category: 'Phrasal',
+      description: 'Master 50+ phrasal verbs for daily conversations',
+      total: 50,
+      learned: 32,
+      reviews: 15,
+    },
+    {
+      id: 2,
+      title: 'IELTS Writing Band 8',
+      category: 'IELTS',
+      description: 'Essential vocabulary and phrases for IELTS writing',
+      total: 68,
+      learned: 45,
+      reviews: 22,
+    },
+    {
+      id: 3,
+      title: 'Grammar Tenses',
+      category: 'Grammar',
+      description: 'Complete guide to English tenses and their usage',
+      total: 42,
+      learned: 42,
+      reviews: 8,
+    },
+    {
+      id: 4,
+      title: 'Business English',
+      category: 'Business',
+      description: 'Professional vocabulary for international business',
+      total: 55,
+      learned: 21,
+      reviews: 10,
+    },
+    {
+      id: 5,
+      title: 'Daily Conversation Starters',
+      category: 'Daily',
+      description: 'Common phrases and idioms for everyday talk',
+      total: 38,
+      learned: 28,
+      reviews: 19,
+    },
+    {
+      id: 6,
+      title: 'Vocabulary: Nature & Environment',
+      category: 'Vocabulary',
+      description: 'Words and phrases related to nature and ecology',
+      total: 45,
+      learned: 18,
+      reviews: 5,
+    },
+    {
+      id: 7,
+      title: 'Medicine & Health',
+      category: 'Vocabulary',
+      description: 'Medical terminology and health-related vocabulary',
+      total: 52,
+      learned: 33,
+      reviews: 11,
+    },
+    {
+      id: 8,
+      title: 'Academic Collocations',
+      category: 'Grammar',
+      description: 'Word combinations commonly used in academic writing',
+      total: 60,
+      learned: 44,
+      reviews: 16,
+    },
+  ];
+
+  // Check for ?tab=daily query param on mount
+  useEffect(() => {
+    if (searchParams.get('tab') === 'daily') {
+      setSelectedCategory('Daily');
+    }
+  }, [searchParams]);
 
   const [mockStudySets, setmockStudySets] = useState([]);
   useEffect(() => {
@@ -18,6 +133,7 @@ export default function StudySets() {
 
     fetchData();
   }, []);
+ main
 
   const categories = ['All', 'Grammar', 'Vocabulary', 'Phrasal', 'IELTS', 'Business', 'Daily'];
 
@@ -32,13 +148,11 @@ export default function StudySets() {
   });
 
   const handleStudyClick = (setId) => {
-    // TODO: Navigate to study mode or open study modal
-    console.log('Study set:', setId);
+    navigate(`/StudySets/study/${setId}`);
   };
 
   const handleQuizClick = (setId) => {
-    // TODO: Navigate to quiz mode or open quiz modal
-    console.log('Quiz set:', setId);
+    navigate(`/StudySets/quiz/${setId}`);
   };
 
   const handleCreateNew = () => {

@@ -1,7 +1,7 @@
 import { BookOpen, Play, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Button from './Button';
-import ProgressBar from './ProgressBar';
+import Button from '../components/Button';
+import ProgressBar from '../components/ProgressBar';
 
 export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
   const navigate = useNavigate();
@@ -77,7 +77,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
             variant="primary"
             size="md"
             onClick={() => onStudyClick && onStudyClick(set.id)}
-            className="flex-1"
+            className="flex-1 flex items-center justify-center gap-2"
           >
             <Play size={16} />
             Study
@@ -86,7 +86,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
             variant="outline"
             size="md"
             onClick={() => onQuizClick && onQuizClick(set.id)}
-            className="flex-1"
+            className="flex-1 flex items-center justify-center gap-2"
           >
             <Zap size={16} />
             Quiz
