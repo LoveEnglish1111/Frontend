@@ -24,15 +24,24 @@
 //         </div>
 //     )
 // }
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Plus, Search } from 'lucide-react';
 import Button from '../components/Button';
 import StudySetCard from '../components/StudySetCard';
 import Input from '../components/Input';
 
 export default function StudySets() {
+  const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Check for ?tab=daily query param on mount
+  useEffect(() => {
+    if (searchParams.get('tab') === 'daily') {
+      setSelectedCategory('Daily');
+    }
+  }, [searchParams]);
 
   // Mock study sets data
   const mockStudySets = [
