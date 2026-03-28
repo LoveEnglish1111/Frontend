@@ -24,12 +24,12 @@
 //         </div>
 //     )
 // }
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
 import { Plus, Search } from 'lucide-react';
 import Button from '../components/Button';
 import StudySetCard from '../components/StudySetCard';
 import Input from '../components/Input';
+import axios from 'axios';
 
 export default function StudySets() {
   const [searchParams] = useSearchParams();
@@ -43,81 +43,15 @@ export default function StudySets() {
     }
   }, [searchParams]);
 
-  // Mock study sets data
-  const mockStudySets = [
-    {
-      id: 1,
-      title: 'Phrasal Verbs Advanced',
-      category: 'Phrasal',
-      description: 'Master 50+ phrasal verbs for daily conversations',
-      total: 50,
-      learned: 32,
-      reviews: 15,
-    },
-    {
-      id: 2,
-      title: 'IELTS Writing Band 8',
-      category: 'IELTS',
-      description: 'Essential vocabulary and phrases for IELTS writing',
-      total: 68,
-      learned: 45,
-      reviews: 22,
-    },
-    {
-      id: 3,
-      title: 'Grammar Tenses',
-      category: 'Grammar',
-      description: 'Complete guide to English tenses and their usage',
-      total: 42,
-      learned: 42,
-      reviews: 8,
-    },
-    {
-      id: 4,
-      title: 'Business English',
-      category: 'Business',
-      description: 'Professional vocabulary for international business',
-      total: 55,
-      learned: 21,
-      reviews: 10,
-    },
-    {
-      id: 5,
-      title: 'Daily Conversation Starters',
-      category: 'Daily',
-      description: 'Common phrases and idioms for everyday talk',
-      total: 38,
-      learned: 28,
-      reviews: 19,
-    },
-    {
-      id: 6,
-      title: 'Vocabulary: Nature & Environment',
-      category: 'Vocabulary',
-      description: 'Words and phrases related to nature and ecology',
-      total: 45,
-      learned: 18,
-      reviews: 5,
-    },
-    {
-      id: 7,
-      title: 'Medicine & Health',
-      category: 'Vocabulary',
-      description: 'Medical terminology and health-related vocabulary',
-      total: 52,
-      learned: 33,
-      reviews: 11,
-    },
-    {
-      id: 8,
-      title: 'Academic Collocations',
-      category: 'Grammar',
-      description: 'Word combinations commonly used in academic writing',
-      total: 60,
-      learned: 44,
-      reviews: 16,
-    },
-  ];
+  const [mockStudySets, setmockStudySets] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await axios.get("http://localhost:1111/StudySets");
+      setmockStudySets(res.data);
+    };
+
+    fetchData();
+  }, []);
 
   const categories = ['All', 'Grammar', 'Vocabulary', 'Phrasal', 'IELTS', 'Business', 'Daily'];
 
@@ -144,6 +78,7 @@ export default function StudySets() {
   const handleCreateNew = () => {
     // TODO: Open create set modal
     console.log('Create new study set');
+    getMockStudySets();
   };
 
   return (
