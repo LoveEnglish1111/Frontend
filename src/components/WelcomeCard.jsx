@@ -37,19 +37,20 @@ export default function WelcomeCard({ currentUser }) {
 
         {/* Quick Navigation Buttons */}
         <div className="flex gap-3 flex-wrap">
-          {quickActions.map((action) => {
-            const IconComponent = action.icon;
-            return (
-              <button
-                key={action.label}
-                onClick={() => handleNavigation(action.path)}
-                className="flex flex-col items-center gap-2 bg-white/20 hover:bg-white/30 text-white px-5 py-3 rounded-xl transition-all duration-200"
-              >
-                <IconComponent size={24} />
-                <span className="text-sm font-medium">{action.label}</span>
-              </button>
-            );
-          })}
+          <Button
+            variant="primary"
+            size="md"
+            className="bg-white text-primary-600 hover:bg-blue-50"
+          >
+            Start Learning
+          </Button>
+          <Button
+            variant="outline"
+            size="md"
+            className="border-white text-white hover:bg-white hover:bg-opacity-10"
+          >
+            View Progress
+          </Button>
         </div>
       </div>
     </div>
