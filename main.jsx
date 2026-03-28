@@ -10,6 +10,8 @@ import Profile from './src/Page/Profile.jsx';
 import AdminPanel from './src/Page/AdminPanel.jsx';
 import SignIn from './src/Page/SignIn.jsx';
 
+import TestComponent from './src/Page/TestComponent.jsx';
+
 console.log("Hello world");
 createRoot(document.getElementById('root')).render(
   	<StrictMode>
@@ -24,6 +26,7 @@ createRoot(document.getElementById('root')).render(
 				</Route>
 
 				<Route path='/SignIn' element={<SignIn/>}></Route>
+				<Route path='/Test' element={<TestComponent/>}></Route>
 			</Routes>
 		</BrowserRouter>
 	</StrictMode>,
