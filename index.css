@@ -39,15 +39,60 @@
 
 
 @theme {
-    /* Background and primary color */
+    /* Primary Color - Brand Blue */
+    --color-primary: #2563eb;
+    --color-primary-foreground: #fff;
+    --color-primary-50: #eff6ff;
+    --color-primary-100: #dbeafe;
+    --color-primary-200: #bfdbfe;
+    --color-primary-300: #93c5fd;
+    --color-primary-400: #60a5fa;
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    --color-primary-800: #1e40af;
+    --color-primary-900: #1e3a8a;
+
+    /* Secondary - Gray Palette */
+    --color-secondary: #f1f5f9;
+    --color-secondary-foreground: #0f172a;
+
+    /* Background */
     --color-background: #f8fafc;
     --color-foreground: #0f172a;
-    --color-primary: #2563eb;
+    --color-card: #fff;
+    --color-card-foreground: #0f172a;
 
-    /* Sidebar color */
+    /* Borders & Inputs */
+    --color-border: #e2e8f0;
+    --color-input: #e2e8f0;
+    --color-input-foreground: #0f172a;
+    --color-input-background: #fff;
+
+    /* Accent & Status Colors */
+    --color-success: #10b981;
+    --color-success-foreground: #fff;
+    --color-warning: #f59e0b;
+    --color-warning-foreground: #fff;
+    --color-destructive: #ef4444;
+    --color-destructive-foreground: #fff;
+
+    /* Muted (for secondary text/disabled states) */
+    --color-muted: #f1f5f9;
+    --color-muted-foreground: #64748b;
+
+    /* Sidebar specific */
     --color-sidebar: #fff;
     --color-sidebar-foreground: #0f172a;
     --color-sidebar-primary: #2563eb;
     --color-sidebar-primary-foreground: #fff;
     --color-sidebar-border: #e2e8f0;
+    --color-sidebar-accent: #f1f5f9;
+    --color-sidebar-accent-foreground: #0f172a;
+
+    /* Ring (focus states) */
+    --color-ring: #2563eb;
+
+    /* Radius */
+    --radius: 0.75rem;
 }
