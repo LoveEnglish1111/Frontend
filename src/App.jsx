@@ -1,7 +1,7 @@
 import { IoHomeSharp } from "react-icons/io5";
 import { FaBookOpen, FaPerson, FaShield } from "react-icons/fa6";
 import { MdPeopleAlt } from "react-icons/md";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Sidebar, {SidebarItem} from "./components/Sidebar";
 
 function App() {

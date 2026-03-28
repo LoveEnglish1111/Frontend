@@ -8,6 +8,7 @@ import StudySets from './src/Page/StudySets.jsx';
 import Community from './src/Page/Community.jsx';
 import Profile from './src/Page/Profile.jsx';
 import AdminPanel from './src/Page/AdminPanel.jsx';
+import SignIn from './src/Page/SignIn.jsx';
 
 console.log("Hello world");
 createRoot(document.getElementById('root')).render(
@@ -21,6 +22,8 @@ createRoot(document.getElementById('root')).render(
 					<Route path='/Profile' element={<Profile/>}></Route>
 					<Route path='/AdminPanel' element={<AdminPanel/>}></Route>
 				</Route>
+
+				<Route path='/SignIn' element={<SignIn/>}></Route>
 			</Routes>
 		</BrowserRouter>
 	</StrictMode>,
