@@ -1,54 +1,58 @@
-import { IoHomeSharp } from "react-icons/io5";
-import { FaBookOpen, FaPerson, FaShield } from "react-icons/fa6";
-import { MdPeopleAlt } from "react-icons/md";
+import { Home, BookOpen, Users, User, Shield } from "lucide-react";
 import { Outlet, useLocation } from "react-router-dom";
-import Sidebar, {SidebarItem} from "./components/Sidebar";
+import Sidebar, { SidebarItem } from "./components/Sidebar";
 
 function App() {
-	const SlideBar = [
+	const navigationItems = [
 		{
-			"Name" : "Home",
-			"Icon" : <IoHomeSharp />,
-			"Link" : "/"
+			Name: "Home",
+			Icon: <Home size={20} />,
+			Link: "/"
 		},
-
 		{
-			"Name" : "Study Sets",
-			"Icon" : <FaBookOpen />,
-			"Link" : "/StudySets"
+			Name: "Study Sets",
+			Icon: <BookOpen size={20} />,
+			Link: "/StudySets"
 		},
-
 		{
-			"Name" : "Community",
-			"Icon" : <MdPeopleAlt />,
-			"Link" : "/Community"
+			Name: "Community",
+			Icon: <Users size={20} />,
+			Link: "/Community"
 		},
-
 		{
-			"Name" : "Profile",
-			"Icon" : <FaPerson />,
-			"Link" : "/Profile"
+			Name: "Profile",
+			Icon: <User size={20} />,
+			Link: "/Profile"
 		},
-
 		{
-			"Name" : "Admin Panel",
-			"Icon" : <FaShield />,
-			"Link" : "/AdminPanel"
+			Name: "Admin Panel",
+			Icon: <Shield size={20} />,
+			Link: "/AdminPanel"
 		},
-	]
+	];
 
 	const location = useLocation();
-	console.log(location.pathname);
-  	return (
-    	<div className="flex w-screen h-screen bg-background">
+
+	return (
+		<div className="flex w-screen h-screen bg-slate-50 overflow-hidden">
 			<Sidebar>
-				{SlideBar.map((page) => (		
-					<SidebarItem icon={page.Icon} text={page.Name} to={page.Link} active={location.pathname == page.Link}/>
+				{navigationItems.map((item, index) => (
+					<SidebarItem 
+						key={index}
+						icon={item.Icon} 
+						text={item.Name} 
+						to={item.Link} 
+						active={location.pathname === item.Link}
+					/>
 				))}
 			</Sidebar>
-			<Outlet/>
-    	</div>
-  	)
+
+			{/* Main Content Area */}
+			<main className="flex-1 overflow-auto bg-slate-50">
+				<Outlet />
+			</main>
+		</div>
+	);
 }
 
 export default App;

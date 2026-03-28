@@ -3,31 +3,47 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './src/App.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './src/context/AuthContext.jsx';
+import ProtectedRoute from './src/components/ProtectedRoute.jsx';
+
+// Auth Pages
+import SignIn from './src/Page/SignIn.jsx';
+import SignUp from './src/Page/SignUp.jsx';
+import ForgotPassword from './src/Page/ForgotPassword.jsx';
+import VerifyEmail from './src/Page/VerifyEmail.jsx';
+
+// Protected Pages
 import Home from './src/Page/Home.jsx';
 import StudySets from './src/Page/StudySets.jsx';
 import Community from './src/Page/Community.jsx';
 import Profile from './src/Page/Profile.jsx';
 import AdminPanel from './src/Page/AdminPanel.jsx';
-import SignIn from './src/Page/SignIn.jsx';
 
-import TestComponent from './src/Page/TestComponent.jsx';
-
-console.log("Hello world");
 createRoot(document.getElementById('root')).render(
   	<StrictMode>
     	<BrowserRouter>
-			<Routes>
-				<Route path='/' element={<App/>}>
-					<Route path='/' element={<Home/>}></Route>
-					<Route path='/StudySets' element={<StudySets/>}></Route>
-					<Route path='/Community' element={<Community/>}></Route>
-					<Route path='/Profile' element={<Profile/>}></Route>
-					<Route path='/AdminPanel' element={<AdminPanel/>}></Route>
-				</Route>
+      		<AuthProvider>
+				<Routes>
+					{/* Public Auth Routes */}
+					<Route path='/SignIn' element={<SignIn/>}></Route>
+					<Route path='/SignUp' element={<SignUp/>}></Route>
+					<Route path='/ForgotPassword' element={<ForgotPassword/>}></Route>
+					<Route path='/VerifyEmail' element={<VerifyEmail/>}></Route>
 
-				<Route path='/SignIn' element={<SignIn/>}></Route>
-				<Route path='/Test' element={<TestComponent/>}></Route>
-			</Routes>
+					{/* Protected Routes */}
+					<Route path='/' element={
+						<ProtectedRoute>
+							<App/>
+						</ProtectedRoute>
+					}>
+						<Route path='/' element={<Home/>}></Route>
+						<Route path='/StudySets' element={<StudySets/>}></Route>
+						<Route path='/Community' element={<Community/>}></Route>
+						<Route path='/Profile' element={<Profile/>}></Route>
+						<Route path='/AdminPanel' element={<AdminPanel/>}></Route>
+					</Route>
+				</Routes>
+			</AuthProvider>
 		</BrowserRouter>
 	</StrictMode>,
 )
