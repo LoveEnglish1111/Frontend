@@ -1,5 +1,5 @@
 import { Home, BookOpen, Users, User, Shield } from "lucide-react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Sidebar, { SidebarItem } from "./components/Sidebar";
 
 function App() {
@@ -31,8 +31,6 @@ function App() {
 		},
 	];
 
-	const location = useLocation();
-
 	return (
 		<div className="flex w-screen h-screen bg-slate-50 overflow-hidden">
 			<Sidebar>
@@ -41,8 +39,7 @@ function App() {
 						key={index}
 						icon={item.Icon} 
 						text={item.Name} 
-						to={item.Link} 
-						active={location.pathname === item.Link}
+						to={item.Link}
 					/>
 				))}
 			</Sidebar>
