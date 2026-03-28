@@ -6,7 +6,7 @@ import Button from "../components/Button";
 export default function Home() {
   // Mock data - In Phase 3+, this will come from API
   const userStats = {
-    wordsLearned: ,
+    wordsLearned: 0,
     dayStreak: 0,
     postsShared: 0,
     totalPoints: 0,
