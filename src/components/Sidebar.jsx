@@ -1,6 +1,6 @@
 import { useContext, createContext, useState } from "react"
 import { MoreVertical, ChevronLast, ChevronFirst, LogOut } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useResolvedPath, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const SidebarContext = createContext();
@@ -81,18 +81,21 @@ export default function Sidebar({ children }) {
     );
 }
 
-export function SidebarItem({ icon, text, to, active, alert }) {
+export function SidebarItem({ icon, text, to, alert }) {
     const { expanded } = useContext(SidebarContext);
+    const resolvedPath = useResolvedPath(to);
+    const location = useLocation();
+    const isActive = location.pathname === resolvedPath.pathname;
 
     return (
-        <Link to={to} className="block">
+        <NavLink to={to} className="block">
             <li
                 className={`
                     relative flex items-center gap-3 py-2.5 px-3
                     rounded-lg cursor-pointer transition-all duration-200
                     font-medium text-sm
                     ${
-                        active
+                        isActive
                             ? "bg-primary-600 text-white shadow-md"
                             : "text-foreground hover:bg-secondary active:bg-slate-200"
                     }
@@ -132,6 +135,6 @@ export function SidebarItem({ icon, text, to, active, alert }) {
                     </div>
                 )}
             </li>
-        </Link>
+        </NavLink>
     );
 }
