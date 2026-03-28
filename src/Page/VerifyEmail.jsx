@@ -6,68 +6,68 @@ import Input from '../components/Input';
 import { useAuth } from '../context/AuthContext';
 
 export default function VerifyEmail() {
-  const [code, setCode] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [verified, setVerified] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
-  const { verifyEmail } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+    const [code, setCode] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState({});
+    const [verified, setVerified] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+    const { verifyEmail } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
 
   // Get email from location state (passed from SignUp)
-  const email = location.state?.email || 'your@email.com';
+    const email = location.state?.email || 'your@email.com';
 
   // Timer for code expiration
-  useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [timeLeft]);
+    useEffect(() => {
+        if (timeLeft > 0) {
+        const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+        return () => clearTimeout(timer);
+        }
+    }, [timeLeft]);
 
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  };
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setErrors({});
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setErrors({});
 
-    // Validation
-    const newErrors = {};
-    if (!code) newErrors.code = 'Verification code is required';
-    if (code.length !== 6) newErrors.code = 'Code must be 6 digits';
+        // Validation
+        const newErrors = {};
+        if (!code) newErrors.code = 'Verification code is required';
+        if (code.length !== 6) newErrors.code = 'Code must be 6 digits';
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setIsLoading(false);
-      return;
+        if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        setIsLoading(false);
+        return;
     }
 
     // Call verify email API
     const result = await verifyEmail(email, code);
     setIsLoading(false);
 
-    if (result.success) {
-      setVerified(true);
-      // Auto redirect after 2 seconds
-      setTimeout(() => navigate('/SignIn'), 2000);
-    } else {
-      setErrors({ code: result.message });
-    }
-  };
+        if (result.success) {
+            setVerified(true);
+            // Auto redirect after 2 seconds
+            setTimeout(() => navigate('/SignIn'), 2000);
+        } else {
+            setErrors({ code: result.message });
+        }
+    };
 
-  const handleResendCode = async () => {
-    setIsLoading(true);
-    // TODO: Implement resend code logic
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setTimeLeft(300);
-    setIsLoading(false);
-  };
+    const handleResendCode = async () => {
+        setIsLoading(true);
+        // TODO: Implement resend code logic
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setTimeLeft(300);
+        setIsLoading(false);
+    };
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center p-4 py-8">
