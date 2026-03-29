@@ -1,7 +1,7 @@
-import { BookOpen, Flame, Share2, Trophy } from "lucide-react";
-import WelcomeCard from "../components/WelcomeCard";
-import StatsCard from "../components/StatsCard";
-import Button from "../components/Button";
+import { BookOpen, Flame, Share2, Trophy } from 'lucide-react';
+import WelcomeCard from '../components/WelcomeCard';
+import StatsCard from '../components/StatsCard';
+import Button from '../components/Button';
 
 export default function Home({ currentUser }) {
   const userStats = {
@@ -11,26 +11,26 @@ export default function Home({ currentUser }) {
     totalPoints: 0,
   };
 
-  const recentActivity = [
-    {
-      id: 1,
-      action: "Completed Flashcard Set",
-      description: "Phrasal Verbs - Advanced Level",
-      timeAgo: "2 hours ago",
-    },
-    {
-      id: 2,
-      action: "Posted in Community",
-      description: "Tips for IELTS Speaking Test",
-      timeAgo: "5 hours ago",
-    },
-    {
-      id: 3,
-      action: "Learned New Words",
-      description: "Business English Vocabulary",
-      timeAgo: "Yesterday",
-    },
-  ];
+    const recentActivity = [
+        {
+            id: 1,
+            action: 'Completed Flashcard Set',
+            description: 'Phrasal Verbs - Advanced Level',
+            timeAgo: '2 hours ago',
+        },
+        {
+            id: 2,
+            action: 'Posted in Community',
+            description: 'Tips for IELTS Speaking Test',
+            timeAgo: '5 hours ago',
+        },
+        {
+            id: 3,
+            action: 'Learned New Words',
+            description: 'Business English Vocabulary',
+            timeAgo: 'Yesterday',
+        },
+    ];
 
   return (
     <div className="flex-1 bg-background overflow-auto">

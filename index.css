@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* :root {
     --font-size: 16px;
@@ -36,7 +36,6 @@
     
     --sidebar-ring: #2563eb;
 } */
-
 
 @theme {
     /* Primary Color - Brand Blue */
