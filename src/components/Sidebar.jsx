@@ -38,7 +38,7 @@ export default function Sidebar({ children }) {
 
                     <button
                         onClick={() => setExpanded((curr) => !curr)}
-                        className="p-1.5 rounded-lg bg-secondary hover:bg-slate-200 transition-colors text-foreground"
+                        className="cursor-pointer p-1.5 rounded-lg bg-secondary hover:bg-slate-200 transition-colors text-foreground"
                         title={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
                     >
                         {expanded ? (
@@ -85,7 +85,7 @@ export default function Sidebar({ children }) {
                     {expanded && (
                         <button
                             onClick={handleLogout}
-                            className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-red-50 rounded-lg transition-colors"
+                            className="cursor-pointer w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-red-50 rounded-lg transition-colors"
                         >
                             <LogOut size={16} />
                             <span>Đăng xuất</span>

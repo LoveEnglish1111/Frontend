@@ -107,7 +107,7 @@ export default function StudySets() {
                             variant="primary"
                             size="md"
                             onClick={handleCreateNew}
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-2 cursor-pointer"
                         >
                             <Plus size={18} />
                             Create New Set
@@ -125,7 +125,7 @@ export default function StudySets() {
                             <button
                                 key={category}
                                 onClick={() => setSelectedCategory(category)}
-                                className={`px-4 py-2 rounded-full font-medium transition-all text-sm ${
+                                className={`px-4 py-2 rounded-full font-medium transition-all text-sm cursor-pointer ${
                                     selectedCategory === category
                                         ? 'bg-primary-600 text-white shadow-md'
                                         : 'bg-white border-2 border-border text-muted-foreground hover:border-primary-600'
