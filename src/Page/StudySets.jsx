@@ -3,6 +3,7 @@ import { Plus, Search } from 'lucide-react';
 import Button from '../components/Button';
 import StudySetCard from '../components/StudySetCard';
 import Input from '../components/Input';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function StudySets() {
