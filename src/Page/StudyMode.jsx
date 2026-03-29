@@ -2,29 +2,28 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Study from '../components/Flashcard/Study.jsx';
 import Button from '../components/Button';
+import { useStudy } from '../context/studyContext.jsx';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function StudyMode() {
     const { setId } = useParams();
     const navigate = useNavigate();
+    const {studyData} = useStudy();
+    const [vocabularyData, setVocabularyData] = useState([]);
 
-    // Mock data - thay bằng dữ liệu thực từ API sau
-    const mockCards = [
-        {
-            id: 1,
-            front: 'What is "phrasal verb"?',
-            back: 'A verb combined with preposition or adverb',
-        },
-        {
-            id: 2,
-            front: 'Give an example of phrasal verb',
-            back: 'Turn on, turn off, pick up, etc.',
-        },
-        {
-            id: 3,
-            front: 'Use "break down" in a sentence',
-            back: 'The car broke down on the highway.',
-        },
-    ];
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`http://localhost:1111/vocabulary?flashCard_id=${studyData._id}`);
+                setVocabularyData(res.data[0].Vocabulary)
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <div className="min-h-screen bg-slate-50">
@@ -46,7 +45,7 @@ export default function StudyMode() {
 
             {/* Study Content */}
             <div className="max-w-6xl mx-auto py-8">
-                <Study cards={mockCards} courseTitle={`Study Set #${setId}`} />
+                <Study cards={vocabularyData} courseTitle={`Study Set: ${studyData.title}`} />
             </div>
         </div>
     );

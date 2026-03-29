@@ -5,90 +5,17 @@ import StudySetCard from '../components/StudySetCard';
 import Input from '../components/Input';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { useStudy } from '../context/studyContext.jsx';
 
 export default function StudySets() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-
-    // Mock / initial study sets data
-    const INITIAL_STUDY_SETS = [
-        {
-            id: 1,
-            title: 'Phrasal Verbs Advanced',
-            category: 'Phrasal',
-            description: 'Master 50+ phrasal verbs for daily conversations',
-            total: 50,
-            learned: 32,
-            reviews: 15,
-        },
-        {
-            id: 2,
-            title: 'IELTS Writing Band 8',
-            category: 'IELTS',
-            description: 'Essential vocabulary and phrases for IELTS writing',
-            total: 68,
-            learned: 45,
-            reviews: 22,
-        },
-        {
-            id: 3,
-            title: 'Grammar Tenses',
-            category: 'Grammar',
-            description: 'Complete guide to English tenses and their usage',
-            total: 42,
-            learned: 42,
-            reviews: 8,
-        },
-        {
-            id: 4,
-            title: 'Business English',
-            category: 'Business',
-            description: 'Professional vocabulary for international business',
-            total: 55,
-            learned: 21,
-            reviews: 10,
-        },
-        {
-            id: 5,
-            title: 'Daily Conversation Starters',
-            category: 'Daily',
-            description: 'Common phrases and idioms for everyday talk',
-            total: 38,
-            learned: 28,
-            reviews: 19,
-        },
-        {
-            id: 6,
-            title: 'Vocabulary: Nature & Environment',
-            category: 'Vocabulary',
-            description: 'Words and phrases related to nature and ecology',
-            total: 45,
-            learned: 18,
-            reviews: 5,
-        },
-        {
-            id: 7,
-            title: 'Medicine & Health',
-            category: 'Vocabulary',
-            description: 'Medical terminology and health-related vocabulary',
-            total: 52,
-            learned: 33,
-            reviews: 11,
-        },
-        {
-            id: 8,
-            title: 'Academic Collocations',
-            category: 'Grammar',
-            description: 'Word combinations commonly used in academic writing',
-            total: 60,
-            learned: 44,
-            reviews: 16,
-        },
-    ];
-
+    const { user } = useAuth();
+    const { ChangeStudyData } = useStudy();
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');
-    const [studySets, setStudySets] = useState(INITIAL_STUDY_SETS);
+    const [studySets, setStudySets] = useState([]);
 
     // categories used in UI
     const categories = [
@@ -112,7 +39,7 @@ export default function StudySets() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('http://localhost:1111/StudySets');
+                const res = await axios.get(`http://localhost:1111/StudySets?user_id=${user._id}`);
                 if (res.data && Array.isArray(res.data)) {
                     setStudySets(res.data);
                 }
@@ -135,14 +62,17 @@ export default function StudySets() {
         return categoryMatch && searchMatch;
     });
 
-    const handleStudyClick = (setId) => {
+
+    const handleStudyClick = (set) => {
         // navigate to study mode
-        navigate(`/StudySets/study/${setId}`);
+        ChangeStudyData(set)
+        navigate(`/StudySets/study/${set._id}`);
     };
 
-    const handleQuizClick = (setId) => {
+    const handleQuizClick = (set) => {
         // navigate to quiz mode
-        navigate(`/StudySets/quiz/${setId}`);
+        ChangeStudyData(set)
+        navigate(`/StudySets/quiz/${set._id}`);
     };
 
     const handleCreateNew = () => {
@@ -218,10 +148,10 @@ export default function StudySets() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {filteredSets.map((set) => (
                             <StudySetCard
-                                key={set.id}
+                                key={set._id}
                                 set={set}
-                                onStudyClick={handleStudyClick}
-                                onQuizClick={handleQuizClick}
+                                onStudyClick={() => handleStudyClick(set)}
+                                onQuizClick={() => handleQuizClick(set)}
                             />
                         ))}
                     </div>

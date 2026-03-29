@@ -43,7 +43,6 @@ export default function Study({ cards = [], courseTitle = '' }) {
     };
 
     const isLearned = learned.has(currentIndex);
-
     return (
         <div className="max-w-4xl mx-auto p-6">
             <div className="mb-8">
@@ -53,13 +52,13 @@ export default function Study({ cards = [], courseTitle = '' }) {
                         className="bg-blue-600 h-2 rounded-full transition-all"
                         style={{ width: `${progress}%` }}
                     ></div>
-                </div>
-                <p className="text-sm mt-2">
+                </div>sm
+                <p className="text- mt-2">
                     {currentIndex + 1} / {cards.length} | {learnedCount} learned
                 </p>
             </div>
 
-            <div className="mb-8">
+            <div className="mb-8 flex justify-center">
                 <Flashcard Vocabulary={currentCard} />
             </div>
 

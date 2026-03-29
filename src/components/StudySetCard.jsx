@@ -90,7 +90,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                         variant="primary"
                         size="md"
                         fullWidth
-                        onClick={() => onStudyClick && onStudyClick(set.id)}
+                        onClick={() => onStudyClick && onStudyClick(set._id)}
                         className="flex items-center justify-center gap-2"
                     >
                         <Play size={16} />
@@ -100,7 +100,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                         variant="outline"
                         size="md"
                         fullWidth
-                        onClick={() => onQuizClick && onQuizClick(set.id)}
+                        onClick={() => onQuizClick && onQuizClick(set._id)}
                         className="flex items-center justify-center gap-2"
                     >
                         <Zap size={16} />
