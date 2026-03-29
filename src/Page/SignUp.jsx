@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Github, Chrome } from 'lucide-react';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 export default function SignUp() {
     const [formData, setFormData] = useState({
@@ -14,8 +15,38 @@ export default function SignUp() {
     });
     const [agreeToTerms, setAgreeToTerms] = useState(false);
     const [errors, setErrors] = useState({});
-    const { signup, isLoading } = useAuth();
+    const [passwordStrength, setPasswordStrength] = useState('');
+    const { signup, isLoading, clearError, authError } = useAuth();
     const navigate = useNavigate();
+    const { toast } = useToast();
+
+    // Tính toán độ mạnh của password
+    const calculatePasswordStrength = (pwd) => {
+        if (!pwd) {
+            setPasswordStrength('');
+            return;
+        }
+
+        let score = 0;
+        if (pwd.length >= 6) score++;
+        if (pwd.length >= 10) score++;
+        if (/[a-z]/.test(pwd)) score++;
+        if (/[A-Z]/.test(pwd)) score++;
+        if (/[0-9]/.test(pwd)) score++;
+        if (/[!@#$%^&*]/.test(pwd)) score++;
+
+        if (score <= 2) {
+            setPasswordStrength('weak');
+        } else if (score <= 4) {
+            setPasswordStrength('fair');
+        } else {
+            setPasswordStrength('strong');
+        }
+    };
+
+    useEffect(() => {
+        clearError();
+    }, [clearError]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,6 +54,12 @@ export default function SignUp() {
             ...prev,
             [name]: value,
         }));
+
+        // Calculate password strength when password changes
+        if (name === 'password') {
+            calculatePasswordStrength(value);
+        }
+
         // Clear error for this field when user starts typing
         if (errors[name]) {
             setErrors((prev) => ({
@@ -30,6 +67,14 @@ export default function SignUp() {
                 [name]: '',
             }));
         }
+    };
+
+    // Get password strength color
+    const getPasswordStrengthColor = () => {
+        if (passwordStrength === 'weak') return 'bg-red-500';
+        if (passwordStrength === 'fair') return 'bg-amber-500';
+        if (passwordStrength === 'strong') return 'bg-green-500';
+        return 'bg-gray-300';
     };
 
     const handleSubmit = async (e) => {
@@ -41,17 +86,23 @@ export default function SignUp() {
 
         if (!formData.fullName.trim())
             newErrors.fullName = 'Full name is required';
+        else if (formData.fullName.trim().length < 2)
+            newErrors.fullName = 'Full name must be at least 2 characters';
+
         if (!formData.email) newErrors.email = 'Email is required';
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
             newErrors.email = 'Please enter a valid email';
         }
+
         if (!formData.password) newErrors.password = 'Password is required';
-        if (formData.password.length < 8) {
-            newErrors.password = 'Password must be at least 8 characters';
+        if (formData.password.length < 6) {
+            newErrors.password = 'Password must be at least 6 characters';
         }
+
         if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = 'Passwords do not match';
         }
+
         if (!agreeToTerms) newErrors.terms = 'You must agree to the terms';
 
         if (Object.keys(newErrors).length > 0) {
@@ -61,14 +112,14 @@ export default function SignUp() {
 
         // Call signup from Auth context
         const result = await signup(
+            formData.fullName,
             formData.email,
             formData.password,
-            formData.fullName,
         );
 
         if (result.success) {
-            // Redirect to email verification page
-            navigate('/VerifyEmail', { state: { email: formData.email } });
+            toast.success('🎉 Account created successfully! Redirecting...');
+            setTimeout(() => navigate('/SignIn'), 1500);
         } else {
             setErrors({ form: result.message });
         }
@@ -80,7 +131,7 @@ export default function SignUp() {
                 {/* Logo / Branding */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-primary-600 mb-2">
-                        ELSN
+                        IRISH
                     </h1>
                     <p className="text-muted-foreground font-medium">
                         English Learning Social Network
@@ -95,6 +146,15 @@ export default function SignUp() {
                     <p className="text-center text-muted-foreground text-sm mb-6">
                         Join us and start learning today!
                     </p>
+
+                    {/* Form-level error */}
+                    {(errors.form || authError) && (
+                        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <p className="text-sm font-medium text-red-700">
+                                {errors.form || authError}
+                            </p>
+                        </div>
+                    )}
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -123,19 +183,46 @@ export default function SignUp() {
                         />
 
                         {/* Password Input */}
-                        <Input
-                            label="Password"
-                            type="password"
-                            name="password"
-                            placeholder="Create a strong password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            error={errors.password}
-                            required
-                        />
-                        <p className="text-xs text-muted-foreground">
-                            Must be at least 8 characters
-                        </p>
+                        <div className="space-y-1">
+                            <Input
+                                label="Password"
+                                type="password"
+                                name="password"
+                                placeholder="Create a strong password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                error={errors.password}
+                                required
+                            />
+                            
+                            {/* Password Strength Indicator */}
+                            {formData.password && (
+                                <div className="flex items-center gap-2 mt-2">
+                                    <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full transition-all ${getPasswordStrengthColor()}`}
+                                            style={{
+                                                width:
+                                                    passwordStrength === 'weak'
+                                                        ? '33%'
+                                                        : passwordStrength === 'fair'
+                                                            ? '66%'
+                                                            : '100%',
+                                            }}
+                                        ></div>
+                                    </div>
+                                    <span className="text-xs font-medium capitalize">
+                                        {passwordStrength === 'weak' && <span className="text-red-600">Weak</span>}
+                                        {passwordStrength === 'fair' && <span className="text-amber-600">Fair</span>}
+                                        {passwordStrength === 'strong' && <span className="text-green-600">Strong</span>}
+                                    </span>
+                                </div>
+                            )}
+
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Minimum 6 characters with mix of uppercase, numbers, and symbols for stronger password
+                            </p>
+                        </div>
 
                         {/* Confirm Password Input */}
                         <Input
@@ -157,9 +244,9 @@ export default function SignUp() {
                                 onChange={(e) =>
                                     setAgreeToTerms(e.target.checked)
                                 }
-                                className="w-4 h-4 rounded border-2 border-input accent-primary-600 cursor-pointer mt-0.5 flex-shrink-0"
+                                className="w-5 h-5 rounded border-2 border-input accent-primary-600 cursor-pointer mt-0.5 flex-shrink-0"
                             />
-                            <span className="text-sm font-medium text-foreground">
+                            <span className="text-sm font-medium text-foreground leading-snug">
                                 I agree to the{' '}
                                 <Link
                                     to="#"
@@ -189,6 +276,7 @@ export default function SignUp() {
                             size="lg"
                             fullWidth
                             isLoading={isLoading}
+                            disabled={isLoading}
                             className="mt-6"
                         >
                             {isLoading
@@ -215,7 +303,8 @@ export default function SignUp() {
                             type="button"
                             variant="outline"
                             size="md"
-                            className="flex items-center justify-center gap-2"
+                            disabled
+                            className="flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
                         >
                             <Chrome size={18} />
                             <span className="hidden sm:inline">Google</span>
@@ -224,7 +313,8 @@ export default function SignUp() {
                             type="button"
                             variant="outline"
                             size="md"
-                            className="flex items-center justify-center gap-2"
+                            disabled
+                            className="flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
                         >
                             <Github size={18} />
                             <span className="hidden sm:inline">GitHub</span>
@@ -241,6 +331,13 @@ export default function SignUp() {
                             Sign In
                         </Link>
                     </p>
+                </div>
+
+                {/* Demo Credentials */}
+                <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <p className="text-xs font-medium text-blue-900 mb-2">Demo Accounts:</p>
+                    <p className="text-xs text-blue-800">👤 User: user@irish.com / User123!</p>
+                    <p className="text-xs text-blue-800">👨‍💼 Admin: admin@irish.com / Admin123!</p>
                 </div>
             </div>
         </div>
