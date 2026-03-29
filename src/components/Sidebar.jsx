@@ -1,7 +1,12 @@
-import { useContext, createContext, useState } from "react"
-import { MoreVertical, ChevronLast, ChevronFirst, LogOut } from "lucide-react";
-import { NavLink, useNavigate, useResolvedPath, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useContext, createContext, useState } from 'react';
+import { MoreVertical, ChevronLast, ChevronFirst, LogOut } from 'lucide-react';
+import {
+    NavLink,
+    useNavigate,
+    useResolvedPath,
+    useLocation,
+} from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const SidebarContext = createContext();
 
@@ -11,8 +16,8 @@ export default function Sidebar({ children }) {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-      signout();
-      navigate('/SignIn');
+        signout();
+        navigate('/SignIn');
     };
 
     return (
@@ -22,17 +27,25 @@ export default function Sidebar({ children }) {
                 <div className="p-4 pb-2 flex justify-between items-center border-b border-border">
                     {expanded && (
                         <div className="flex flex-col">
-                            <h1 className="font-bold text-xl text-primary-600">ELSN</h1>
-                            <p className="text-xs text-muted-foreground font-medium">Learn Together</p>
+                            <h1 className="font-bold text-xl text-primary-600">
+                                ELSN
+                            </h1>
+                            <p className="text-xs text-muted-foreground font-medium">
+                                Learn Together
+                            </p>
                         </div>
                     )}
 
                     <button
                         onClick={() => setExpanded((curr) => !curr)}
                         className="p-1.5 rounded-lg bg-secondary hover:bg-slate-200 transition-colors text-foreground"
-                        title={expanded ? "Collapse sidebar" : "Expand sidebar"}
+                        title={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
                     >
-                        {expanded ? <ChevronFirst size={18} /> : <ChevronLast size={18} />}
+                        {expanded ? (
+                            <ChevronFirst size={18} />
+                        ) : (
+                            <ChevronLast size={18} />
+                        )}
                     </button>
                 </div>
 
@@ -61,13 +74,16 @@ export default function Sidebar({ children }) {
                         )}
                         {expanded && (
                             <button className="p-1 hover:bg-secondary rounded transition-colors">
-                                <MoreVertical size={16} className="text-muted-foreground" />
+                                <MoreVertical
+                                    size={16}
+                                    className="text-muted-foreground"
+                                />
                             </button>
                         )}
                     </div>
 
                     {expanded && (
-                        <button 
+                        <button
                             onClick={handleLogout}
                             className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-red-50 rounded-lg transition-colors"
                         >
@@ -96,19 +112,17 @@ export function SidebarItem({ icon, text, to, alert }) {
                     font-medium text-sm
                     ${
                         isActive
-                            ? "bg-primary-600 text-white shadow-md"
-                            : "text-foreground hover:bg-secondary active:bg-slate-200"
+                            ? 'bg-primary-600 text-white shadow-md'
+                            : 'text-foreground hover:bg-secondary active:bg-slate-200'
                     }
                 `}
                 title={text}
             >
-                <div className="flex-shrink-0 flex items-center">
-                    {icon}
-                </div>
+                <div className="flex-shrink-0 flex items-center">{icon}</div>
 
                 <span
                     className={`overflow-hidden transition-all duration-300 whitespace-nowrap ${
-                        expanded ? "w-auto opacity-100" : "w-0 opacity-0"
+                        expanded ? 'w-auto opacity-100' : 'w-0 opacity-0'
                     }`}
                 >
                     {text}
@@ -117,7 +131,7 @@ export function SidebarItem({ icon, text, to, alert }) {
                 {alert && (
                     <div
                         className={`absolute right-2 w-2 h-2 rounded-full bg-destructive flex-shrink-0 ${
-                            expanded ? "" : "top-2"
+                            expanded ? '' : 'top-2'
                         }`}
                     />
                 )}

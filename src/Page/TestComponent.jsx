@@ -1,13 +1,13 @@
-import FlashCard from "../components/Flashcard/FlashCard.jsx"
+import FlashCard from '../components/Flashcard/FlashCard.jsx';
 
 export default function TestComponent() {
     const Vocabulary = {
-        "en" : "Hello",
-        "vi" : "Xin chào"
-    }
+        en: 'Hello',
+        vi: 'Xin chào',
+    };
     return (
         <div>
-            <FlashCard Vocabulary = {Vocabulary}/>
+            <FlashCard Vocabulary={Vocabulary} />
         </div>
-    )
+    );
 }

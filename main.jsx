@@ -1,7 +1,7 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './src/App.jsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './src/App.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './src/context/AuthContext.jsx';
 import ProtectedRoute from './src/components/ProtectedRoute.jsx';
@@ -20,30 +20,39 @@ import Profile from './src/Page/Profile.jsx';
 import AdminPanel from './src/Page/AdminPanel.jsx';
 
 createRoot(document.getElementById('root')).render(
-  	<StrictMode>
-    	<BrowserRouter>
-      		<AuthProvider>
-				<Routes>
-					{/* Public Auth Routes */}
-					<Route path='/SignIn' element={<SignIn/>}></Route>
-					<Route path='/SignUp' element={<SignUp/>}></Route>
-					<Route path='/ForgotPassword' element={<ForgotPassword/>}></Route>
-					<Route path='/VerifyEmail' element={<VerifyEmail/>}></Route>
+    <StrictMode>
+        <BrowserRouter>
+            <AuthProvider>
+                <Routes>
+                    {/* Public Auth Routes */}
+                    <Route path="/SignIn" element={<SignIn />}></Route>
+                    <Route path="/SignUp" element={<SignUp />}></Route>
+                    <Route
+                        path="/ForgotPassword"
+                        element={<ForgotPassword />}
+                    ></Route>
+                    <Route
+                        path="/VerifyEmail"
+                        element={<VerifyEmail />}
+                    ></Route>
 
-					{/* Protected Routes */}
-					<Route path='/' element={
-						<ProtectedRoute>
-							<App/>
-						</ProtectedRoute>
-					}>
-						<Route index element={<Home/>} />
-						<Route path='StudySets' element={<StudySets/>} />
-						<Route path='Community' element={<Community/>} />
-						<Route path='Profile' element={<Profile/>} />
-						<Route path='AdminPanel' element={<AdminPanel/>} />
-					</Route>
-				</Routes>
-			</AuthProvider>
-		</BrowserRouter>
-	</StrictMode>,
-)
+                    {/* Protected Routes */}
+                    <Route
+                        path="/"
+                        element={
+                            <ProtectedRoute>
+                                <App />
+                            </ProtectedRoute>
+                        }
+                    >
+                        <Route index element={<Home />} />
+                        <Route path="StudySets" element={<StudySets />} />
+                        <Route path="Community" element={<Community />} />
+                        <Route path="Profile" element={<Profile />} />
+                        <Route path="AdminPanel" element={<AdminPanel />} />
+                    </Route>
+                </Routes>
+            </AuthProvider>
+        </BrowserRouter>
+    </StrictMode>,
+);
