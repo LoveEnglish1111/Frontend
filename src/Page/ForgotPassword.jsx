@@ -107,7 +107,9 @@ export default function ForgotPassword() {
                             {/* Form-level error */}
                             {(errors.form || authError) && (
                                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                                    <p className="text-sm font-medium text-red-700">{errors.form || authError}</p>
+                                    <p className="text-sm font-medium text-red-700">
+                                        {errors.form || authError}
+                                    </p>
                                 </div>
                             )}
 
@@ -120,7 +122,12 @@ export default function ForgotPassword() {
                                     placeholder="Enter your email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    onFocus={() => setErrors(prev => ({ ...prev, email: '' }))}
+                                    onFocus={() =>
+                                        setErrors((prev) => ({
+                                            ...prev,
+                                            email: '',
+                                        }))
+                                    }
                                     error={errors.email}
                                     required
                                 />

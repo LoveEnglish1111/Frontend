@@ -24,38 +24,47 @@ import StudyMode from './src/Page/StudyMode.jsx';
 import QuizPage from './src/Page/QuizPage.jsx';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <ToastProvider>
-          <Routes>
-            {/* Public Auth Routes */}
-            <Route path="/SignIn" element={<SignIn />} />
-            <Route path="/SignUp" element={<SignUp />} />
-            <Route path="/ForgotPassword" element={<ForgotPassword />} />
-            <Route path="/VerifyEmail" element={<VerifyEmail />} />
+    <StrictMode>
+        <BrowserRouter>
+            <AuthProvider>
+                <ToastProvider>
+                    <Routes>
+                        {/* Public Auth Routes */}
+                        <Route path="/SignIn" element={<SignIn />} />
+                        <Route path="/SignUp" element={<SignUp />} />
+                        <Route
+                            path="/ForgotPassword"
+                            element={<ForgotPassword />}
+                        />
+                        <Route path="/VerifyEmail" element={<VerifyEmail />} />
 
-            {/* Protected Routes */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <App />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Home />} />
-              <Route path="StudySets" element={<StudySets />} />
-              <Route path="StudySets/study/:setId" element={<StudyMode />} />
-              <Route path="StudySets/quiz/:setId" element={<QuizPage />} />
-              <Route path="Community" element={<Community />} />
-              <Route path="Profile" element={<Profile />} />
-              <Route path="AdminPanel" element={<AdminPanel />} />
-            </Route>
-          </Routes>
-          <ToastContainer />
-        </ToastProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </StrictMode>,
+                        {/* Protected Routes */}
+                        <Route
+                            path="/"
+                            element={
+                                <ProtectedRoute>
+                                    <App />
+                                </ProtectedRoute>
+                            }
+                        >
+                            <Route index element={<Home />} />
+                            <Route path="StudySets" element={<StudySets />} />
+                            <Route
+                                path="StudySets/study/:setId"
+                                element={<StudyMode />}
+                            />
+                            <Route
+                                path="StudySets/quiz/:setId"
+                                element={<QuizPage />}
+                            />
+                            <Route path="Community" element={<Community />} />
+                            <Route path="Profile" element={<Profile />} />
+                            <Route path="AdminPanel" element={<AdminPanel />} />
+                        </Route>
+                    </Routes>
+                    <ToastContainer />
+                </ToastProvider>
+            </AuthProvider>
+        </BrowserRouter>
+    </StrictMode>,
 );

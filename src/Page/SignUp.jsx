@@ -194,7 +194,7 @@ export default function SignUp() {
                                 error={errors.password}
                                 required
                             />
-                            
+
                             {/* Password Strength Indicator */}
                             {formData.password && (
                                 <div className="flex items-center gap-2 mt-2">
@@ -205,22 +205,36 @@ export default function SignUp() {
                                                 width:
                                                     passwordStrength === 'weak'
                                                         ? '33%'
-                                                        : passwordStrength === 'fair'
-                                                            ? '66%'
-                                                            : '100%',
+                                                        : passwordStrength ===
+                                                            'fair'
+                                                          ? '66%'
+                                                          : '100%',
                                             }}
                                         ></div>
                                     </div>
                                     <span className="text-xs font-medium capitalize">
-                                        {passwordStrength === 'weak' && <span className="text-red-600">Weak</span>}
-                                        {passwordStrength === 'fair' && <span className="text-amber-600">Fair</span>}
-                                        {passwordStrength === 'strong' && <span className="text-green-600">Strong</span>}
+                                        {passwordStrength === 'weak' && (
+                                            <span className="text-red-600">
+                                                Weak
+                                            </span>
+                                        )}
+                                        {passwordStrength === 'fair' && (
+                                            <span className="text-amber-600">
+                                                Fair
+                                            </span>
+                                        )}
+                                        {passwordStrength === 'strong' && (
+                                            <span className="text-green-600">
+                                                Strong
+                                            </span>
+                                        )}
                                     </span>
                                 </div>
                             )}
 
                             <p className="text-xs text-muted-foreground mt-1">
-                                Minimum 6 characters with mix of uppercase, numbers, and symbols for stronger password
+                                Minimum 6 characters with mix of uppercase,
+                                numbers, and symbols for stronger password
                             </p>
                         </div>
 
@@ -335,9 +349,15 @@ export default function SignUp() {
 
                 {/* Demo Credentials */}
                 <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-xs font-medium text-blue-900 mb-2">Demo Accounts:</p>
-                    <p className="text-xs text-blue-800">👤 User: user@irish.com / User123!</p>
-                    <p className="text-xs text-blue-800">👨‍💼 Admin: admin@irish.com / Admin123!</p>
+                    <p className="text-xs font-medium text-blue-900 mb-2">
+                        Demo Accounts:
+                    </p>
+                    <p className="text-xs text-blue-800">
+                        👤 User: user@irish.com / User123!
+                    </p>
+                    <p className="text-xs text-blue-800">
+                        👨‍💼 Admin: admin@irish.com / Admin123!
+                    </p>
                 </div>
             </div>
         </div>

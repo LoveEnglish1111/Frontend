@@ -1,4 +1,4 @@
-import Flashcard from "../components/Flashcard/Flashcard.jsx";
+import Flashcard from '../components/Flashcard/Flashcard.jsx';
 
 export default function TestComponent() {
     const Vocabulary = {

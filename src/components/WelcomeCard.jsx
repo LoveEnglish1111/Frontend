@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { BookOpen, Users, Zap, User } from "lucide-react";
-import Button from "./Button";
+import { useNavigate } from 'react-router-dom';
+import { BookOpen, Users, Zap, User } from 'lucide-react';
+import Button from './Button';
 
 export default function WelcomeCard({ userName = 'John' }) {
     const currentHour = new Date().getHours();
