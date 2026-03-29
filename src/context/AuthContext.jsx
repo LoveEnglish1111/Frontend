@@ -5,6 +5,8 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    // const [achievementUser, setAchievementUser] = useState(null);
+    // const [learningHistorysUser, setLearningHistorysUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true); // Start true to check token on mount
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [authError, setAuthError] = useState(null);

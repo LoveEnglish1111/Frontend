@@ -12,19 +12,33 @@ import Button from '../components/Button';
 import AchievementBadge from '../components/AchievementBadge';
 import LearningStreak from '../components/LearningStreak';
 import StatCircle from '../components/StatCircle';
-import UserApi from '../api/UserApi';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function Profile() {
     const { user, signout } = useAuth();
+    const [profile, setProfile] = useState({
+        achievementData : [],
+        learningHistoryData : []
+    });
 
-    console.log(user);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`http://localhost:1111/profile?user_id=${user._id}`);
+                setProfile(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchData();
+    }, []);
     // Mock user data
     const mockUser = user;
-
     // Mock achievements
-    const achievements = UserApi.achievements;
+    const achievements = profile.achievementData;
 
-    // Mock streak data (84 days = 12 weeks)
     const streakDays = Array.from({ length: 84 }, (_, i) => {
         if (i < 10) return Math.floor(Math.random() * 3);
         if (i < 20) return Math.floor(Math.random() * 4);
@@ -34,7 +48,7 @@ export default function Profile() {
     });
 
     // Mock learning history
-    const learningHistory = UserApi.learningHistory;
+    const learningHistory = profile.learningHistoryData;
 
     return (
         <div className="min-h-screen bg-slate-50">
