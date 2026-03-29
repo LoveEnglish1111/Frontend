@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import axios from 'axios';
 
 export default function SignIn() {
     const [email, setEmail] = useState(
@@ -24,57 +25,42 @@ export default function SignIn() {
     useEffect(() => {
         clearError();
     }, [clearError]);
-
-    // Validate email format
-    const isValidEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-
-    const validateForm = () => {
-        const newErrors = {};
-
-        if (!email.trim()) {
-            newErrors.email = 'Email is required';
-        } else if (!isValidEmail(email)) {
-            newErrors.email = 'Please enter a valid email address';
-        }
-
-        if (!password) {
-            newErrors.password = 'Password is required';
-        } else if (password.length < 6) {
-            newErrors.password = 'Password must be at least 6 characters';
-        }
-
-        return newErrors;
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
 
-        // Validate form
-        const formErrors = validateForm();
-        if (Object.keys(formErrors).length > 0) {
-            setErrors(formErrors);
+        try {
+        const res = await axios.get(`http://localhost:1111/auth?email=${email}&password=${password}`);
+            console.log("Hello world");
+        } catch (error) {
+            var message = error.response.data.message;
+            const newErrors = {};
+            if (error.response.data.At == "Email") newErrors.email = message;
+            else newErrors.password = message;
+            setErrors(newErrors);
             return;
         }
 
+        console.log(email, password);
+
         // Save email if remember me is checked
-        if (rememberMe) {
-            localStorage.setItem('savedEmail', email);
-        } else {
-            localStorage.removeItem('savedEmail');
-        }
+        // if (rememberMe) {
+        //     localStorage.setItem('savedEmail', email);
+        // } else {
+        //     localStorage.removeItem('savedEmail');
+        // }
 
-        // Call signin
-        const result = await signin(email, password);
+        // // Call signin
+        // const result = await signin(email, password);
 
-        if (result.success) {
-            toast.success('🎉 Signed in successfully!');
-            // Redirect to previous page or home
-            const from = location.state?.from?.pathname || '/';
-            setTimeout(() => navigate(from), 500);
-        } else {
-            setErrors({ form: result.message });
-        }
+        // if (result.success) {
+        //     toast.success('🎉 Signed in successfully!');
+        //     // Redirect to previous page or home
+        //     const from = location.state?.from?.pathname || '/';
+        //     setTimeout(() => navigate(from), 500);
+        // } else {
+        //     setErrors({ form: result.message });
+        // }
     };
 
     return (
@@ -83,7 +69,7 @@ export default function SignIn() {
                 {/* Logo / Branding */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-primary-600 mb-2">
-                        IRISH
+                        Love English
                     </h1>
                     <p className="text-muted-foreground font-medium">
                         English Learning Social Network
@@ -224,7 +210,7 @@ export default function SignIn() {
                 </div>
 
                 {/* Demo Credentials */}
-                <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                {/* <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <p className="text-xs font-medium text-blue-900 mb-2">
                         Demo Accounts:
                     </p>
@@ -234,7 +220,7 @@ export default function SignIn() {
                     <p className="text-xs text-blue-800">
                         👨‍💼 Admin: admin@irish.com / Admin123!
                     </p>
-                </div>
+                </div> */}
 
                 {/* Footer */}
                 <p className="text-center text-muted-foreground text-xs mt-6">
