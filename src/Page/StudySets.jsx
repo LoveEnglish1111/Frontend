@@ -24,25 +24,20 @@
 //         </div>
 //     )
 // }
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Search } from 'lucide-react';
 import Button from '../components/Button';
 import StudySetCard from '../components/StudySetCard';
 import Input from '../components/Input';
- fix/study-quiz-buttons
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 
- main
 export default function StudySets() {
   const [searchParams] = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
- fix/study-quiz-buttons
   const navigate = useNavigate();
+  
   // Mock study sets data
-  const mockStudySets = [
+  const INITIAL_STUDY_SETS = [
     {
       id: 1,
       title: 'Phrasal Verbs Advanced',
@@ -117,6 +112,10 @@ export default function StudySets() {
     },
   ];
 
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [studySets, setStudySets] = useState(INITIAL_STUDY_SETS);
+
   // Check for ?tab=daily query param on mount
   useEffect(() => {
     if (searchParams.get('tab') === 'daily') {
@@ -124,21 +123,27 @@ export default function StudySets() {
     }
   }, [searchParams]);
 
-  const [mockStudySets, setmockStudySets] = useState([]);
+  // Fetch study sets from API on component mount
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("http://localhost:1111/StudySets");
-      setmockStudySets(res.data);
+      try {
+        const res = await axios.get("http://localhost:1111/StudySets");
+        if (res.data && Array.isArray(res.data)) {
+          setStudySets(res.data);
+        }
+      } catch (error) {
+        console.error('Error fetching study sets:', error);
+        setStudySets(INITIAL_STUDY_SETS);
+      }
     };
 
     fetchData();
   }, []);
- main
 
   const categories = ['All', 'Grammar', 'Vocabulary', 'Phrasal', 'IELTS', 'Business', 'Daily'];
 
   // Filter study sets
-  const filteredSets = mockStudySets.filter((set) => {
+  const filteredSets = studySets.filter((set) => {
     const categoryMatch =
       selectedCategory === 'All' || set.category === selectedCategory;
     const searchMatch =
@@ -158,7 +163,6 @@ export default function StudySets() {
   const handleCreateNew = () => {
     // TODO: Open create set modal
     console.log('Create new study set');
-    getMockStudySets();
   };
 
   return (
@@ -244,21 +248,21 @@ export default function StudySets() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="bg-white rounded-2xl border-2 border-border p-6 text-center">
               <p className="text-3xl font-bold text-primary-600 mb-2">
-                {mockStudySets.reduce((sum, set) => sum + set.learned, 0)}
+                {studySets.reduce((sum, set) => sum + set.learned, 0)}
               </p>
               <p className="text-muted-foreground">Cards Learned</p>
             </div>
             <div className="bg-white rounded-2xl border-2 border-border p-6 text-center">
               <p className="text-3xl font-bold text-success mb-2">
-                {mockStudySets.length}
+                {studySets.length}
               </p>
               <p className="text-muted-foreground">Study Sets</p>
             </div>
             <div className="bg-white rounded-2xl border-2 border-border p-6 text-center">
               <p className="text-3xl font-bold text-warning mb-2">
                 {Math.round(
-                  (mockStudySets.reduce((sum, set) => sum + set.learned, 0) /
-                    mockStudySets.reduce((sum, set) => sum + set.total, 0)) *
+                  (studySets.reduce((sum, set) => sum + set.learned, 0) /
+                    studySets.reduce((sum, set) => sum + set.total, 0)) *
                     100
                 )}%
               </p>
@@ -266,7 +270,7 @@ export default function StudySets() {
             </div>
             <div className="bg-white rounded-2xl border-2 border-border p-6 text-center">
               <p className="text-3xl font-bold text-info mb-2">
-                {mockStudySets.reduce((sum, set) => sum + set.reviews, 0)}
+                {studySets.reduce((sum, set) => sum + set.reviews, 0)}
               </p>
               <p className="text-muted-foreground">Total Reviews</p>
             </div>

@@ -1,4 +1,4 @@
-import FlashCard from "../components/Flashcard/FlashCard.jsx"
+import Flashcard from "../components/Flashcard/Flashcard.jsx"
 
 export default function TestComponent() {
     const Vocabulary = {
@@ -7,7 +7,7 @@ export default function TestComponent() {
     }
     return (
         <div>
-            <FlashCard Vocabulary = {Vocabulary}/>
+            <Flashcard Vocabulary={Vocabulary}/>
         </div>
     )
 }

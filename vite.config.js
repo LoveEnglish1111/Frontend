@@ -9,5 +9,5 @@ export default defineConfig({
 		tailwindcss(),
 	],
 
-  publicDir: "static"
+  publicDir: "public"
 });
