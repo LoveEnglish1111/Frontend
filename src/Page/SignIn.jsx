@@ -1,179 +1,220 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Github, Chrome } from 'lucide-react';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 export default function SignIn() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
-    const [errors, setErrors] = useState({});
-    const { signin, isLoading } = useAuth();
-    const navigate = useNavigate();
+  const [email, setEmail] = useState(() => localStorage.getItem('savedEmail') || '');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(!!localStorage.getItem('savedEmail'));
+  const [errors, setErrors] = useState({});
+  const { signin, isLoading, clearError, authError } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { toast } = useToast();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setErrors({});
+  // Clear auth error when component mounts
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
 
-        // Form validation
-        const newErrors = {};
-        if (!email) newErrors.email = 'Email is required';
-        if (!password) newErrors.password = 'Password is required';
+  // Validate email format
+  const isValidEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
-        }
+  const validateForm = () => {
+    const newErrors = {};
 
-        // Call signin from Auth context
-        const result = await signin(email, password);
+    if (!email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!isValidEmail(email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
 
-        if (result.success) {
-            navigate('/'); // Redirect to home on success
-        } else {
-            setErrors({ form: result.message });
-        }
-    };
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
 
-    return (
-        <div className="min-h-screen w-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center p-4">
-            <div className="w-full max-w-md">
-                {/* Logo / Branding */}
-                <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-primary-600 mb-2">
-                        LOVE ENGLISH
-                    </h1>
-                    <p className="text-muted-foreground font-medium">
-                        English Learning Social Network
-                    </p>
-                </div>
+    return newErrors;
+  };
 
-                {/* Card */}
-                <div className="bg-white rounded-2xl shadow-lg p-8">
-                    <h2 className="text-3xl font-bold text-foreground mb-6 text-center">
-                        Sign In
-                    </h2>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({});
 
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        {/* Email Input */}
-                        <Input
-                            label="Email Address"
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            error={errors.email}
-                            required
-                        />
+    // Validate form
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
 
-                        {/* Password Input */}
-                        <Input
-                            label="Password"
-                            type="password"
-                            placeholder="Enter your password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            error={errors.password}
-                            required
-                        />
+    // Save email if remember me is checked
+    if (rememberMe) {
+      localStorage.setItem('savedEmail', email);
+    } else {
+      localStorage.removeItem('savedEmail');
+    }
 
-                        {/* Remember Me & Forgot Password */}
-                        <div className="flex items-center justify-between text-sm">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={rememberMe}
-                                    onChange={(e) =>
-                                        setRememberMe(e.target.checked)
-                                    }
-                                    className="w-4 h-4 rounded border-2 border-input accent-primary-600 cursor-pointer"
-                                />
-                                <span className="font-medium text-foreground">
-                                    Remember me
-                                </span>
-                            </label>
-                            <Link
-                                to="/forgot-password"
-                                className="text-primary-600 hover:text-primary-700 font-semibold"
-                            >
-                                Forgot password?
-                            </Link>
-                        </div>
+    // Call signin
+    const result = await signin(email, password);
 
-                        {/* Submit Button */}
-                        <Button
-                            type="submit"
-                            variant="primary"
-                            size="lg"
-                            fullWidth
-                            isLoading={isLoading}
-                            className="mt-6"
-                        >
-                            {isLoading ? 'Signing in...' : 'Sign In'}
-                        </Button>
-                    </form>
+    if (result.success) {
+      toast.success('🎉 Signed in successfully!');
+      // Redirect to previous page or home
+      const from = location.state?.from?.pathname || '/';
+      setTimeout(() => navigate(from), 500);
+    } else {
+      setErrors({ form: result.message });
+    }
+  };
 
-                    {/* Divider */}
-                    <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t-2 border-border"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-3 bg-white text-muted-foreground font-medium">
-                                Or continue with
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Social Login Placeholders */}
-                    <div className="grid grid-cols-2 gap-3 mb-6">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="md"
-                            className="flex items-center justify-center gap-2"
-                        >
-                            <Chrome size={18} />
-                            <span className="hidden sm:inline">Google</span>
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="md"
-                            className="flex items-center justify-center gap-2"
-                        >
-                            <Github size={18} />
-                            <span className="hidden sm:inline">GitHub</span>
-                        </Button>
-                    </div>
-
-                    {/* Sign Up Link */}
-                    <p className="text-center text-muted-foreground font-medium">
-                        Don't have an account?{' '}
-                        <Link
-                            to="/SignUp"
-                            className="text-primary-600 hover:text-primary-700 font-bold"
-                        >
-                            Sign Up
-                        </Link>
-                    </p>
-                </div>
-
-                {/* Footer */}
-                <p className="text-center text-muted-foreground text-xs mt-6">
-                    By signing in, you agree to our{' '}
-                    <Link to="#" className="text-primary-600 hover:underline">
-                        Terms of Service
-                    </Link>{' '}
-                    and{' '}
-                    <Link to="#" className="text-primary-600 hover:underline">
-                        Privacy Policy
-                    </Link>
-                </p>
-            </div>
+  return (
+    <div className="min-h-screen w-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Logo / Branding */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-primary-600 mb-2">IRISH</h1>
+          <p className="text-muted-foreground font-medium">English Learning Social Network</p>
         </div>
-    );
+
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-lg p-8">
+          <h2 className="text-3xl font-bold text-foreground mb-2 text-center">Sign In</h2>
+          <p className="text-center text-muted-foreground text-sm mb-6">Welcome back! Sign in to your account</p>
+
+          {/* Form-level error */}
+          {(errors.form || authError) && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm font-medium text-red-700">{errors.form || authError}</p>
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Email Input */}
+            <Input
+              label="Email Address"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onFocus={() => setErrors(prev => ({ ...prev, email: '' }))}
+              error={errors.email}
+              required
+            />
+
+            {/* Password Input */}
+            <Input
+              label="Password"
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onFocus={() => setErrors(prev => ({ ...prev, password: '' }))}
+              error={errors.password}
+              required
+            />
+
+            {/* Remember Me & Forgot Password */}
+            <div className="flex items-center justify-between text-sm">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-2 border-input accent-primary-600 cursor-pointer"
+                />
+                <span className="font-medium text-foreground">Remember me</span>
+              </label>
+              <Link
+                to="/ForgotPassword"
+                className="text-primary-600 hover:text-primary-700 font-semibold transition"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              fullWidth
+              isLoading={isLoading}
+              disabled={isLoading}
+              className="mt-6"
+            >
+              {isLoading ? 'Signing in...' : 'Sign In'}
+            </Button>
+          </form>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t-2 border-border"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-3 bg-white text-muted-foreground font-medium">Or continue with</span>
+            </div>
+          </div>
+
+          {/* Social Login Placeholders */}
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <Button
+              type="button"
+              variant="outline"
+              size="md"
+              disabled
+              className="flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
+            >
+              <Chrome size={18} />
+              <span className="hidden sm:inline">Google</span>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="md"
+              disabled
+              className="flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
+            >
+              <Github size={18} />
+              <span className="hidden sm:inline">GitHub</span>
+            </Button>
+          </div>
+
+          {/* Sign Up Link */}
+          <p className="text-center text-muted-foreground font-medium">
+            Don't have an account?{' '}
+            <Link to="/SignUp" className="text-primary-600 hover:text-primary-700 font-bold transition">
+              Sign Up
+            </Link>
+          </p>
+        </div>
+
+        {/* Demo Credentials */}
+        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <p className="text-xs font-medium text-blue-900 mb-2">Demo Accounts:</p>
+          <p className="text-xs text-blue-800">👤 User: user@irish.com / User123!</p>
+          <p className="text-xs text-blue-800">👨‍💼 Admin: admin@irish.com / Admin123!</p>
+        </div>
+
+        {/* Footer */}
+        <p className="text-center text-muted-foreground text-xs mt-6">
+          By signing in, you agree to our{' '}
+          <Link to="#" className="text-primary-600 hover:underline">
+            Terms of Service
+          </Link>{' '}
+          and{' '}
+          <Link to="#" className="text-primary-600 hover:underline">
+            Privacy Policy
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
 }

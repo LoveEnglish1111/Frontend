@@ -24,7 +24,7 @@ export default function QuizPage() {
 
       {/* Quiz Content */}
       <div className="max-w-6xl mx-auto py-8">
-        <QuizMode setId={setId} />
+        <QuizMode studySetId={setId} />
       </div>
     </div>
   );
