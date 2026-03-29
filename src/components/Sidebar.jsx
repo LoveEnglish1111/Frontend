@@ -7,6 +7,7 @@ import {
     useLocation,
 } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+// import {UserApi} from "../api/UserApi"
 
 const SidebarContext = createContext();
 
@@ -14,6 +15,8 @@ export default function Sidebar({ children }) {
     const [expanded, setExpanded] = useState(true);
     const { user, signout } = useAuth();
     const navigate = useNavigate();
+
+    console.log(user);
 
     const handleLogout = () => {
         signout();
@@ -28,7 +31,7 @@ export default function Sidebar({ children }) {
                     {expanded && (
                         <div className="flex flex-col">
                             <h1 className="font-bold text-xl text-primary-600">
-                                ELSN
+                                LOVE ENGLISH
                             </h1>
                             <p className="text-xs text-muted-foreground font-medium">
                                 Learn Together

@@ -80,7 +80,7 @@ export default function SignUp() {
                 {/* Logo / Branding */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-primary-600 mb-2">
-                        ELSN
+                        LOVE ENGLISH
                     </h1>
                     <p className="text-muted-foreground font-medium">
                         English Learning Social Network
