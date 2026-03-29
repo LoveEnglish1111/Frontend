@@ -7,7 +7,6 @@ import {
     useLocation,
 } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-// import {UserApi} from "../api/UserApi"
 
 const SidebarContext = createContext();
 
@@ -15,8 +14,6 @@ export default function Sidebar({ children }) {
     const [expanded, setExpanded] = useState(true);
     const { user, signout } = useAuth();
     const navigate = useNavigate();
-
-    console.log(user);
 
     const handleLogout = () => {
         signout();
@@ -68,7 +65,7 @@ export default function Sidebar({ children }) {
                         {expanded && (
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-semibold text-foreground truncate">
-                                    {user?.name || 'User'}
+                                    {user?.username || 'User'}
                                 </p>
                                 <p className="text-xs text-muted-foreground truncate">
                                     {user?.email || 'user@example.com'}

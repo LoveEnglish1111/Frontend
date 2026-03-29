@@ -42,11 +42,8 @@ createRoot(document.getElementById('root')).render(
                         <Route
                             path="/"
                             element={
-                                <ProtectedRoute>
-                                    <App />
-                                </ProtectedRoute>
-                            }
-                        >
+                                <ProtectedRoute><App/></ProtectedRoute>}>
+
                             <Route index element={<Home />} />
                             <Route path="StudySets" element={<StudySets />} />
                             <Route

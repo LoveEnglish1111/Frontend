@@ -17,8 +17,9 @@ import UserApi from '../api/UserApi';
 export default function Profile() {
     const { user, signout } = useAuth();
 
+    console.log(user);
     // Mock user data
-    const mockUser = UserApi.mockUser;
+    const mockUser = user;
 
     // Mock achievements
     const achievements = UserApi.achievements;
@@ -34,7 +35,6 @@ export default function Profile() {
 
     // Mock learning history
     const learningHistory = UserApi.learningHistory;
-    console.log(achievements);
 
     return (
         <div className="min-h-screen bg-slate-50">
@@ -52,7 +52,7 @@ export default function Profile() {
                             <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-2">
                                     <h1 className="text-3xl font-bold text-foreground">
-                                        {mockUser.name}
+                                        {mockUser.username}
                                     </h1>
                                     <span className="bg-primary-100 text-primary-600 px-3 py-1 rounded-full text-sm font-semibold">
                                         {mockUser.level}

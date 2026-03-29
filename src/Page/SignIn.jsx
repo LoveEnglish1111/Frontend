@@ -31,36 +31,26 @@ export default function SignIn() {
 
         try {
         const res = await axios.get(`http://localhost:1111/auth?email=${email}&password=${password}`);
-            console.log("Hello world");
+            const result = signin(res.data);
+            if (rememberMe) {
+                localStorage.setItem('savedEmail', email);
+            } else {
+                localStorage.removeItem('savedEmail');
+            }
+            toast.success('🎉 Signed in successfully!');
+            const from = location.state?.from?.pathname || '/';
+            setTimeout(() => navigate(from), 500);
         } catch (error) {
             var message = error.response.data.message;
             const newErrors = {};
             if (error.response.data.At == "Email") newErrors.email = message;
-            else newErrors.password = message;
+            else if (error.response.data.At == "Password") newErrors.password = message;
+            else {
+                newErrors.email = newErrors.password = message;
+            }
             setErrors(newErrors);
             return;
         }
-
-        console.log(email, password);
-
-        // Save email if remember me is checked
-        // if (rememberMe) {
-        //     localStorage.setItem('savedEmail', email);
-        // } else {
-        //     localStorage.removeItem('savedEmail');
-        // }
-
-        // // Call signin
-        // const result = await signin(email, password);
-
-        // if (result.success) {
-        //     toast.success('🎉 Signed in successfully!');
-        //     // Redirect to previous page or home
-        //     const from = location.state?.from?.pathname || '/';
-        //     setTimeout(() => navigate(from), 500);
-        // } else {
-        //     setErrors({ form: result.message });
-        // }
     };
 
     return (
@@ -208,20 +198,6 @@ export default function SignIn() {
                         </Link>
                     </p>
                 </div>
-
-                {/* Demo Credentials */}
-                {/* <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-xs font-medium text-blue-900 mb-2">
-                        Demo Accounts:
-                    </p>
-                    <p className="text-xs text-blue-800">
-                        👤 User: user@irish.com / User123!
-                    </p>
-                    <p className="text-xs text-blue-800">
-                        👨‍💼 Admin: admin@irish.com / Admin123!
-                    </p>
-                </div> */}
-
                 {/* Footer */}
                 <p className="text-center text-muted-foreground text-xs mt-6">
                     By signing in, you agree to our{' '}
