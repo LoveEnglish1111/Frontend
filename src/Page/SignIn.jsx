@@ -32,7 +32,7 @@ export default function SignIn() {
 
         try {
         const res = await axios.get(`${URL}/auth/login?email=${email}&password=${password}`);
-            const result = signin(res.data);
+            signin(res.data);
             if (rememberMe) {
                 localStorage.setItem('savedEmail', email);
             } else {

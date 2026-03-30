@@ -26,7 +26,6 @@ export default function Profile() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // const res = await axios.get(`http://localhost:1111/profile?user_id=${user._id}`);
                 const res = await axios.get(`${URL}/profile?user_id=${user._id}`);
                 setProfile(res.data);
             } catch (error) {
@@ -64,7 +63,13 @@ export default function Profile() {
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
                         {/* User Info */}
                         <div className="flex items-start gap-6 mb-6 md:mb-0 flex-1">
-                            <div className="text-6xl">{mockUser.avatar}</div>
+                            <div className="text-6xl w-25 h-25">
+                                <img
+                                    src={`https://ui-avatars.com/api/?background=2563eb&color=fff&bold=true&name=${user.username.slice(0,2)}`}
+                                    alt="User Avatar"
+                                    className="w-full h-full rounded-lg flex-shrink-0"
+                                />
+                            </div>
                             <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-2">
                                     <h1 className="text-3xl font-bold text-foreground">

@@ -12,10 +12,12 @@ import {
 } from 'lucide-react';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import { useAuth } from '../context/AuthContext';
 
-export default function AdminPanel({ currentUser }) {
+export default function AdminPanel() {
     const [activeTab, setActiveTab] = useState('overview');
     const [searchTerm, setSearchTerm] = useState('');
+    const {user} = useAuth();
 
     // Mock users data (local state)
     const [users, setUsers] = useState([
@@ -216,7 +218,7 @@ export default function AdminPanel({ currentUser }) {
     };
 
     // Role-based access control (render-block inside component)
-    if (!currentUser || currentUser.role !== 'admin') {
+    if (!user || user.role !== 'admin') {
         return (
             <div className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
                 <div className="bg-white rounded-2xl shadow-md p-10 text-center max-w-md">
