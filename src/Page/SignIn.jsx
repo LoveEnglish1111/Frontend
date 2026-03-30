@@ -7,6 +7,8 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import axios from 'axios';
 
+import URL1 from '../api/UserApi';
+
 export default function SignIn() {
     const [email, setEmail] = useState(
         () => localStorage.getItem('savedEmail') || '',
@@ -30,7 +32,8 @@ export default function SignIn() {
         setErrors({});
 
         try {
-        const res = await axios.get(`http://localhost:1111/auth?email=${email}&password=${password}`);
+        // const res = await axios.get(`http://localhost:1111/auth?email=${email}&password=${password}`);
+        const res = await axios.get(`${URL1}/auth?email=${email}&password=${password}`);
             const result = signin(res.data);
             if (rememberMe) {
                 localStorage.setItem('savedEmail', email);

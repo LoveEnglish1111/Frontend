@@ -15,6 +15,8 @@ import StatCircle from '../components/StatCircle';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+import URL1 from '../api/UserApi';
+
 export default function Profile() {
     const { user, signout } = useAuth();
     const [profile, setProfile] = useState({
@@ -25,7 +27,8 @@ export default function Profile() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`http://localhost:1111/profile?user_id=${user._id}`);
+                // const res = await axios.get(`http://localhost:1111/profile?user_id=${user._id}`);
+                const res = await axios.get(`${URL1}/profile?user_id=${user._id}`);
                 setProfile(res.data);
             } catch (error) {
                 console.log(error);

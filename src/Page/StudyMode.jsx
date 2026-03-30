@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import { useStudy } from '../context/studyContext.jsx';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import URL1 from '../api/UserApi.jsx';
 
 export default function StudyMode() {
     const { setId } = useParams();
@@ -15,7 +16,8 @@ export default function StudyMode() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`http://localhost:1111/vocabulary?flashCard_id=${studyData._id}`);
+                // const res = await axios.get(`http://localhost:1111/vocabulary?flashCard_id=${studyData._id}`);
+                const res = await axios.get(`${URL1}/vocabulary?flashCard_id=${studyData._id}`);
                 setVocabularyData(res.data[0].Vocabulary)
             } catch (error) {
                 console.log(error);

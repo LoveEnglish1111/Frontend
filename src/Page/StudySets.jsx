@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useStudy } from '../context/studyContext.jsx';
+import URL1 from '../api/UserApi.jsx';
 
 export default function StudySets() {
     const [searchParams] = useSearchParams();
@@ -39,7 +40,8 @@ export default function StudySets() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`http://localhost:1111/StudySets?user_id=${user._id}`);
+                // const res = await axios.get(`http://localhost:1111/StudySets?user_id=${user._id}`);
+                const res = await axios.get(`${URL1}/StudySets?user_id=${user._id}`);
                 if (res.data && Array.isArray(res.data)) {
                     setStudySets(res.data);
                 }
