@@ -17,7 +17,7 @@ import { useAuth } from '../context/AuthContext';
 export default function AdminPanel() {
     const [activeTab, setActiveTab] = useState('overview');
     const [searchTerm, setSearchTerm] = useState('');
-    const {user} = useAuth();
+    const { user } = useAuth();
 
     // Mock users data (local state)
     const [users, setUsers] = useState([

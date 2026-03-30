@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
             try {
                 const token = localStorage.getItem('authToken');
                 const storedUser = localStorage.getItem('user');
-                
+
                 // console.log(token, storedUser);
                 if (token && storedUser) {
                     const userData = JSON.parse(storedUser);
@@ -66,56 +66,56 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-//     // Forgot password
-//     const forgotPassword = async (email) => {
-//         setIsLoading(true);
-//         setAuthError(null);
-//         try {
-//             const result = await mockAuthApi.forgotPassword(email);
-//             return result;
-//         } catch (error) {
-//             const message = error.message || 'Failed to send reset link.';
-//             setAuthError(message);
-//             return { success: false, message };
-//         } finally {
-//             setIsLoading(false);
-//         }
-//     };
+    //     // Forgot password
+    //     const forgotPassword = async (email) => {
+    //         setIsLoading(true);
+    //         setAuthError(null);
+    //         try {
+    //             const result = await mockAuthApi.forgotPassword(email);
+    //             return result;
+    //         } catch (error) {
+    //             const message = error.message || 'Failed to send reset link.';
+    //             setAuthError(message);
+    //             return { success: false, message };
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     };
 
-//     // Reset password
-//     const resetPassword = async (token, newPassword) => {
-//         setIsLoading(true);
-//         setAuthError(null);
-//         try {
-//             const result = await mockAuthApi.resetPassword(token, newPassword);
-//             // Clear auth state after password reset
-//             setUser(null);
-//             setIsAuthenticated(false);
-//             return result;
-//         } catch (error) {
-//             const message = error.message || 'Password reset failed.';
-//             setAuthError(message);
-//             return { success: false, message };
-//         } finally {
-//             setIsLoading(false);
-//         }
-//     };
+    //     // Reset password
+    //     const resetPassword = async (token, newPassword) => {
+    //         setIsLoading(true);
+    //         setAuthError(null);
+    //         try {
+    //             const result = await mockAuthApi.resetPassword(token, newPassword);
+    //             // Clear auth state after password reset
+    //             setUser(null);
+    //             setIsAuthenticated(false);
+    //             return result;
+    //         } catch (error) {
+    //             const message = error.message || 'Password reset failed.';
+    //             setAuthError(message);
+    //             return { success: false, message };
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     };
 
-//     // Verify email
-//     const verifyEmail = async (token) => {
-//         setIsLoading(true);
-//         setAuthError(null);
-//         try {
-//             const result = await mockAuthApi.verifyEmail(token);
-//             return result;
-//         } catch (error) {
-//             const message = error.message || 'Email verification failed.';
-//             setAuthError(message);
-//             return { success: false, message };
-//         } finally {
-//             setIsLoading(false);
-//         }
-//     };
+    //     // Verify email
+    //     const verifyEmail = async (token) => {
+    //         setIsLoading(true);
+    //         setAuthError(null);
+    //         try {
+    //             const result = await mockAuthApi.verifyEmail(token);
+    //             return result;
+    //         } catch (error) {
+    //             const message = error.message || 'Email verification failed.';
+    //             setAuthError(message);
+    //             return { success: false, message };
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     };
 
     // Clear error
     const clearError = () => setAuthError(null);

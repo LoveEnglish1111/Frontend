@@ -24,7 +24,7 @@ import StudyMode from './src/Page/StudyMode.jsx';
 import QuizPage from './src/Page/QuizPage.jsx';
 
 // Study Page
-import {StudyProvider} from "./src/context/studyContext.jsx"
+import { StudyProvider } from './src/context/studyContext.jsx';
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
@@ -40,18 +40,27 @@ createRoot(document.getElementById('root')).render(
                                 path="/ForgotPassword"
                                 element={<ForgotPassword />}
                             />
-                            <Route path="/VerifyEmail" element={<VerifyEmail />} />
+                            <Route
+                                path="/VerifyEmail"
+                                element={<VerifyEmail />}
+                            />
 
                             {/* Protected Routes */}
                             <Route
                                 path="/"
                                 element={
-                                    <ProtectedRoute><App/></ProtectedRoute>}>
-
+                                    <ProtectedRoute>
+                                        <App />
+                                    </ProtectedRoute>
+                                }
+                            >
                                 <Route index element={<Home />} />
 
-                                <Route path="StudySets" element={<StudySets />} />
-                                
+                                <Route
+                                    path="StudySets"
+                                    element={<StudySets />}
+                                />
+
                                 <Route
                                     path="StudySets/study/:setId"
                                     element={<StudyMode />}
@@ -61,9 +70,15 @@ createRoot(document.getElementById('root')).render(
                                     element={<QuizPage />}
                                 />
 
-                                <Route path="Community" element={<Community />} />
+                                <Route
+                                    path="Community"
+                                    element={<Community />}
+                                />
                                 <Route path="Profile" element={<Profile />} />
-                                <Route path="AdminPanel" element={<AdminPanel />} />
+                                <Route
+                                    path="AdminPanel"
+                                    element={<AdminPanel />}
+                                />
                             </Route>
                         </Routes>
                         <ToastContainer />

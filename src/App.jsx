@@ -31,13 +31,13 @@ function App() {
             Link: '/AdminPanel',
         },
     ];
-    const {user} = useAuth();
+    const { user } = useAuth();
 
     return (
         <div className="flex w-screen h-screen bg-slate-50 overflow-hidden">
             <Sidebar>
-                {navigationItems.map((item, index) => {    
-                    if (item.Name != "Admin Panel" || user.role == "admin") {
+                {navigationItems.map((item, index) => {
+                    if (item.Name != 'Admin Panel' || user.role == 'admin') {
                         return (
                             <SidebarItem
                                 key={index}
@@ -45,7 +45,7 @@ function App() {
                                 text={item.Name}
                                 to={item.Link}
                             />
-                        )
+                        );
                     }
                 })}
             </Sidebar>

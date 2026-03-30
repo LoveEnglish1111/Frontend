@@ -58,7 +58,7 @@ export default function Sidebar({ children }) {
                 <div className="border-t border-border p-3 space-y-3">
                     <div className="flex items-center gap-3 px-2 py-2">
                         <img
-                            src={`https://ui-avatars.com/api/?background=2563eb&color=fff&bold=true&name=${user.username.slice(0,2)}`}
+                            src={`https://ui-avatars.com/api/?background=2563eb&color=fff&bold=true&name=${user.username.slice(0, 2)}`}
                             alt="User Avatar"
                             className="w-10 h-10 rounded-lg flex-shrink-0"
                         />

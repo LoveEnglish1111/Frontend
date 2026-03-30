@@ -7,8 +7,11 @@ import {
     BookOpen,
     Trophy,
     Zap,
+    X,
+    Check,
 } from 'lucide-react';
 import Button from '../components/Button';
+import Input from '../components/Input';
 import AchievementBadge from '../components/AchievementBadge';
 import LearningStreak from '../components/LearningStreak';
 import StatCircle from '../components/StatCircle';
@@ -19,14 +22,20 @@ import URL from '../api/UserApi';
 export default function Profile() {
     const { user, signout } = useAuth();
     const [profile, setProfile] = useState({
-        achievementData : [],
-        learningHistoryData : []
+        achievementData: [],
+        learningHistoryData: [],
     });
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedUsername, setEditedUsername] = useState(user?.username || '');
+    const [editedAvatar, setEditedAvatar] = useState(user?.avatar || '');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`${URL}/profile?user_id=${user._id}`);
+                // const res = await axios.get(`http://localhost:1111/profile?user_id=${user._id}`);
+                const res = await axios.get(
+                    `${URL}/profile?user_id=${user._id}`,
+                );
                 setProfile(res.data);
             } catch (error) {
                 console.log(error);
@@ -51,6 +60,23 @@ export default function Profile() {
     // Mock learning history
     const learningHistory = profile.learningHistoryData;
 
+    const handleEdit = () => {
+        setEditedUsername(user?.username || '');
+        setEditedAvatar(user?.avatar || '');
+        setIsEditing(true);
+    };
+
+    const handleCancel = () => {
+        setIsEditing(false);
+    };
+
+    const handleSave = () => {
+        // Update user object
+        user.username = editedUsername;
+        user.avatar = editedAvatar;
+        setIsEditing(false);
+    };
+
     return (
         <div className="min-h-screen bg-slate-50">
             {/* Header Background */}
@@ -62,45 +88,103 @@ export default function Profile() {
                 <div className="bg-white rounded-2xl border-2 border-border shadow-lg p-8 mb-8">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
                         {/* User Info */}
-                        <div className="flex items-start gap-6 mb-6 md:mb-0 flex-1">
-                            <div className="text-6xl w-25 h-25">
-                                <img
-                                    src={`https://ui-avatars.com/api/?background=2563eb&color=fff&bold=true&name=${user.username.slice(0,2)}`}
-                                    alt="User Avatar"
-                                    className="w-full h-full rounded-lg flex-shrink-0"
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <h1 className="text-3xl font-bold text-foreground">
-                                        {mockUser.username}
-                                    </h1>
-                                    <span className="bg-primary-100 text-primary-600 px-3 py-1 rounded-full text-sm font-semibold">
-                                        {mockUser.level}
-                                    </span>
+                        {isEditing ? (
+                            // Edit Mode
+                            <div className="flex items-start gap-6 mb-6 md:mb-0 flex-1 w-full">
+                                <div className="text-5xl">
+                                    <Input
+                                        type="text"
+                                        placeholder="Enter emoji"
+                                        value={editedAvatar}
+                                        onChange={(e) =>
+                                            setEditedAvatar(e.target.value)
+                                        }
+                                        maxLength={2}
+                                        containerClassName="w-20"
+                                    />
                                 </div>
-                                <p className="text-muted-foreground mb-3">
-                                    {mockUser.email}
-                                </p>
-                                <p className="text-sm text-muted-foreground mb-2">
-                                    {mockUser.bio}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                    Member since {mockUser.joinDate}
-                                </p>
+                                <div className="flex-1">
+                                    <div className="mb-4">
+                                        <Input
+                                            label="Username"
+                                            type="text"
+                                            placeholder="Enter your username"
+                                            value={editedUsername}
+                                            onChange={(e) =>
+                                                setEditedUsername(
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            variant="primary"
+                                            size="md"
+                                            onClick={handleSave}
+                                            className="flex items-center justify-center gap-2"
+                                        >
+                                            <Check size={16} />
+                                            Save
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="md"
+                                            onClick={handleCancel}
+                                            className="flex items-center justify-center gap-2"
+                                        >
+                                            <X size={16} />
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            // View Mode
+                            <div className="flex items-start gap-6 mb-6 md:mb-0 flex-1">
+                                {/* <div className="text-6xl">{mockUser.avatar}</div> */}
+                                <div className="text-6xl w-25 h-25">
+                                    <img
+                                        src={`https://ui-avatars.com/api/?background=2563eb&color=fff&bold=true&name=${user.username.slice(0, 2)}`}
+                                        alt="User Avatar"
+                                        className="w-full h-full rounded-lg flex-shrink-0"
+                                    />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <h1 className="text-3xl font-bold text-foreground">
+                                            {mockUser.username}
+                                        </h1>
+                                        <span className="bg-primary-100 text-primary-600 px-3 py-1 rounded-full text-sm font-semibold">
+                                            {mockUser.level}
+                                        </span>
+                                    </div>
+                                    <p className="text-muted-foreground mb-3">
+                                        {mockUser.email}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground mb-2">
+                                        {mockUser.bio}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                        Member since {mockUser.joinDate}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Action Buttons */}
                         <div className="flex gap-2 w-full md:w-auto">
-                            <Button
-                                variant="outline"
-                                size="md"
-                                className="flex items-center justify-center gap-2 flex-1 md:flex-none"
-                            >
-                                <Edit2 size={16} />
-                                Edit
-                            </Button>
+                            {!isEditing && (
+                                <Button
+                                    variant="outline"
+                                    size="md"
+                                    className="flex items-center justify-center gap-2 flex-1 md:flex-none"
+                                    onClick={handleEdit}
+                                >
+                                    <Edit2 size={16} />
+                                    Edit
+                                </Button>
+                            )}
                             <Button
                                 variant="outline"
                                 size="md"

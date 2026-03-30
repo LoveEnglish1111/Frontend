@@ -85,7 +85,7 @@ export default function SignUp() {
 
         const newErrors = {};
         if (!agreeToTerms) {
-            newErrors.terms = 'You must agree to the terms'; 
+            newErrors.terms = 'You must agree to the terms';
             setErrors(newErrors);
             return;
         }
@@ -98,18 +98,17 @@ export default function SignUp() {
             var message = error.response.data.message;
             var At = error.response.data.At;
             console.log(message, At);
-            if (error.response.data.At == "username") 
+            if (error.response.data.At == 'username')
                 newErrors.fullName = message;
-            else if (error.response.data.At == "email")
+            else if (error.response.data.At == 'email')
                 newErrors.email = message;
-            else if (error.response.data.At == "password")
+            else if (error.response.data.At == 'password')
                 newErrors.password = message;
             if (Object.keys(newErrors).length > 0) {
                 setErrors(newErrors);
                 return;
             }
         }
-
     };
 
     return (

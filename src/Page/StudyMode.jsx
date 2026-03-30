@@ -9,14 +9,16 @@ import URL from '../api/UserApi.jsx';
 
 export default function StudyMode() {
     const navigate = useNavigate();
-    const {studyData} = useStudy();
+    const { studyData } = useStudy();
     const [vocabularyData, setVocabularyData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`${URL}/vocabulary?flashCard_id=${studyData._id}`);
-                setVocabularyData(res.data[0].Vocabulary)
+                const res = await axios.get(
+                    `${URL}/vocabulary?flashCard_id=${studyData._id}`,
+                );
+                setVocabularyData(res.data[0].Vocabulary);
             } catch (error) {
                 console.log(error);
             }
@@ -45,7 +47,10 @@ export default function StudyMode() {
 
             {/* Study Content */}
             <div className="max-w-6xl mx-auto py-8">
-                <Study cards={vocabularyData} courseTitle={`Study Set: ${studyData.title}`} />
+                <Study
+                    cards={vocabularyData}
+                    courseTitle={`Study Set: ${studyData.title}`}
+                />
             </div>
         </div>
     );

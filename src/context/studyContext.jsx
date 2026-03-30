@@ -1,7 +1,7 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext } from 'react';
 
 const StudyContext = createContext();
-export const StudyProvider = ({ children }) =>  {
+export const StudyProvider = ({ children }) => {
     const [studyData, setStudyData] = useState(null);
 
     function ChangeStudyData(data) {
@@ -10,13 +10,13 @@ export const StudyProvider = ({ children }) =>  {
 
     const value = {
         ChangeStudyData,
-        studyData
-    }
+        studyData,
+    };
 
     return (
         <StudyContext.Provider value={value}>{children}</StudyContext.Provider>
-    )
-}
+    );
+};
 
 export const useStudy = () => {
     const context = useContext(StudyContext);

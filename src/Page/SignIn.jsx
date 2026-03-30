@@ -31,7 +31,9 @@ export default function SignIn() {
         setErrors({});
 
         try {
-        const res = await axios.get(`${URL}/auth/login?email=${email}&password=${password}`);
+            const res = await axios.get(
+                `${URL}/auth/login?email=${email}&password=${password}`,
+            );
             signin(res.data);
             if (rememberMe) {
                 localStorage.setItem('savedEmail', email);
@@ -44,8 +46,9 @@ export default function SignIn() {
         } catch (error) {
             var message = error.response.data.message;
             const newErrors = {};
-            if (error.response.data.At == "Email") newErrors.email = message;
-            else if (error.response.data.At == "Password") newErrors.password = message;
+            if (error.response.data.At == 'Email') newErrors.email = message;
+            else if (error.response.data.At == 'Password')
+                newErrors.password = message;
             else {
                 newErrors.email = newErrors.password = message;
             }
@@ -187,7 +190,6 @@ export default function SignIn() {
                             <span className="hidden sm:inline">GitHub</span>
                         </Button>
                     </div>
-                    
 
                     {/* Sign Up Link */}
                     <p className="text-center text-muted-foreground font-medium">
@@ -201,7 +203,6 @@ export default function SignIn() {
                     </p>
                 </div>
 
-                
                 <div>
                     <h1>Bạn có thể vô 2 tài khoảng này</h1>
                     <div>

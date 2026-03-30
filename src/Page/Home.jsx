@@ -23,10 +23,10 @@ export default function Home() {
             setUserStats(JSON.parse(savedStats));
         } else {
             const mockStats = {
-                wordsLearned: 245,
-                dayStreak: 12,
-                postsShared: 8,
-                totalPoints: 3420,
+                wordsLearned: 0,
+                dayStreak: 0,
+                postsShared: 0,
+                totalPoints: 0,
             };
             setUserStats(mockStats);
             localStorage.setItem('userStats', JSON.stringify(mockStats));
@@ -138,17 +138,17 @@ export default function Home() {
                         variant="outline"
                         size="md"
                         className="w-full text-center"
-                        onClick={() => incrementStat('postsShared')}
+                        onClick={() => incrementStat('dayStreak')}
                     >
-                        💬 Share Post
+                        🔥 Daily Streak
                     </Button>
                     <Button
                         variant="outline"
                         size="md"
                         className="w-full text-center"
-                        onClick={() => incrementStat('dayStreak')}
+                        onClick={() => incrementStat('postsShared')}
                     >
-                        🔥 Daily Streak
+                        💬 Share Post
                     </Button>
                     <Button
                         variant="outline"

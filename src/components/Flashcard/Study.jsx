@@ -52,7 +52,8 @@ export default function Study({ cards = [], courseTitle = '' }) {
                         className="bg-blue-600 h-2 rounded-full transition-all"
                         style={{ width: `${progress}%` }}
                     ></div>
-                </div>sm
+                </div>
+                sm
                 <p className="text- mt-2">
                     {currentIndex + 1} / {cards.length} | {learnedCount} learned
                 </p>

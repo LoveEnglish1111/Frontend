@@ -41,7 +41,9 @@ export default function StudySets() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`${URL}/StudySets?user_id=${user._id}`);
+                const res = await axios.get(
+                    `${URL}/StudySets?user_id=${user._id}`,
+                );
                 if (res.data && Array.isArray(res.data)) {
                     setStudySets(res.data);
                 }
@@ -64,16 +66,15 @@ export default function StudySets() {
         return categoryMatch && searchMatch;
     });
 
-
     const handleStudyClick = (set) => {
         // navigate to study mode
-        ChangeStudyData(set)
+        ChangeStudyData(set);
         navigate(`/StudySets/study/${set._id}`);
     };
 
     const handleQuizClick = (set) => {
         // navigate to quiz mode
-        ChangeStudyData(set)
+        ChangeStudyData(set);
         navigate(`/StudySets/quiz/${set._id}`);
     };
 
