@@ -14,8 +14,7 @@ import LearningStreak from '../components/LearningStreak';
 import StatCircle from '../components/StatCircle';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-
-import URL1 from '../api/UserApi';
+import URL from '../api/UserApi';
 
 export default function Profile() {
     const { user, signout } = useAuth();
@@ -28,7 +27,7 @@ export default function Profile() {
         const fetchData = async () => {
             try {
                 // const res = await axios.get(`http://localhost:1111/profile?user_id=${user._id}`);
-                const res = await axios.get(`${URL1}/profile?user_id=${user._id}`);
+                const res = await axios.get(`${URL}/profile?user_id=${user._id}`);
                 setProfile(res.data);
             } catch (error) {
                 console.log(error);

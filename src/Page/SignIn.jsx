@@ -6,8 +6,7 @@ import Input from '../components/Input';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import axios from 'axios';
-
-import URL1 from '../api/UserApi';
+import URL from '../api/UserApi';
 
 export default function SignIn() {
     const [email, setEmail] = useState(
@@ -32,8 +31,7 @@ export default function SignIn() {
         setErrors({});
 
         try {
-        // const res = await axios.get(`http://localhost:1111/auth?email=${email}&password=${password}`);
-        const res = await axios.get(`${URL1}/auth?email=${email}&password=${password}`);
+        const res = await axios.get(`${URL}/auth/login?email=${email}&password=${password}`);
             const result = signin(res.data);
             if (rememberMe) {
                 localStorage.setItem('savedEmail', email);
@@ -195,7 +193,7 @@ export default function SignIn() {
                     <p className="text-center text-muted-foreground font-medium">
                         Don't have an account?{' '}
                         <Link
-                            // to="/SignUp"
+                            to="/SignUp"
                             className="text-primary-600 hover:text-primary-700 font-bold transition"
                         >
                             Sign Up

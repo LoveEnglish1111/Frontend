@@ -5,6 +5,8 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import URL from '../api/UserApi';
+import axios from 'axios';
 
 export default function SignUp() {
     const [formData, setFormData] = useState({
@@ -81,48 +83,33 @@ export default function SignUp() {
         e.preventDefault();
         setErrors({});
 
-        // Form validation
         const newErrors = {};
-
-        if (!formData.fullName.trim())
-            newErrors.fullName = 'Full name is required';
-        else if (formData.fullName.trim().length < 2)
-            newErrors.fullName = 'Full name must be at least 2 characters';
-
-        if (!formData.email) newErrors.email = 'Email is required';
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            newErrors.email = 'Please enter a valid email';
-        }
-
-        if (!formData.password) newErrors.password = 'Password is required';
-        if (formData.password.length < 6) {
-            newErrors.password = 'Password must be at least 6 characters';
-        }
-
-        if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = 'Passwords do not match';
-        }
-
-        if (!agreeToTerms) newErrors.terms = 'You must agree to the terms';
-
-        if (Object.keys(newErrors).length > 0) {
+        if (!agreeToTerms) {
+            newErrors.terms = 'You must agree to the terms'; 
             setErrors(newErrors);
             return;
         }
 
-        // Call signup from Auth context
-        const result = await signup(
-            formData.fullName,
-            formData.email,
-            formData.password,
-        );
-
-        if (result.success) {
+        try {
+            const res = await axios.post(`${URL}/auth/register`, formData);
             toast.success('🎉 Account created successfully! Redirecting...');
             setTimeout(() => navigate('/SignIn'), 1500);
-        } else {
-            setErrors({ form: result.message });
+        } catch (error) {
+            var message = error.response.data.message;
+            var At = error.response.data.At;
+            console.log(message, At);
+            if (error.response.data.At == "username") 
+                newErrors.fullName = message;
+            else if (error.response.data.At == "email")
+                newErrors.email = message;
+            else if (error.response.data.At == "password")
+                newErrors.password = message;
+            if (Object.keys(newErrors).length > 0) {
+                setErrors(newErrors);
+                return;
+            }
         }
+
     };
 
     return (

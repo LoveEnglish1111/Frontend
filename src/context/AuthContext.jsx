@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true); // Start true to check token on mount
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [authError, setAuthError] = useState(null);
+    const [userId, setUserId] = useState(null);
 
     // Check token & restore user on app load
     useEffect(() => {
@@ -18,7 +19,7 @@ export const AuthProvider = ({ children }) => {
                 const token = localStorage.getItem('authToken');
                 const storedUser = localStorage.getItem('user');
                 
-                console.log(token, storedUser);
+                // console.log(token, storedUser);
                 if (token && storedUser) {
                     const userData = JSON.parse(storedUser);
                     setUser(userData);
@@ -36,27 +37,17 @@ export const AuthProvider = ({ children }) => {
         restoreSession();
     }, []);
 
-//     // Sign up
-//     const signup = async (name, email, password) => {
-//         setIsLoading(true);
-//         setAuthError(null);
-//         try {
-//             const result = await mockAuthApi.register(name, email, password);
-//             return result;
-//         } catch (error) {
-//             const message =
-//                 error.message || 'Registration failed. Please try again.';
-//             setAuthError(message);
-//             return { success: false, message };
-//         } finally {
-//             setIsLoading(false);
-//         }
-//     };
+    // Sign up
+    const signup = async () => {
+        setIsLoading(false);
+        setAuthError(null);
+    };
 
     // Sign in
     const signin = async (user) => {
         setAuthError(null);
         setUser(user);
+        setUserId(user._id);
         setIsAuthenticated(true);
     };
 
@@ -134,7 +125,8 @@ export const AuthProvider = ({ children }) => {
         isLoading,
         isAuthenticated,
         authError,
-        // signup,
+        userId,
+        signup,
         signin,
         signout,
         // forgotPassword,

@@ -9,8 +9,8 @@ export const StudyProvider = ({ children }) =>  {
     }
 
     const value = {
-        studyData,
-        ChangeStudyData
+        ChangeStudyData,
+        studyData
     }
 
     return (
