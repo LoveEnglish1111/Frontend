@@ -35,6 +35,11 @@ export default function SignIn() {
                 `${URL}/auth/login?email=${email}&password=${password}`,
             );
             signin(res.data);
+            if (res.data?.token) {
+                localStorage.setItem('authToken', res.data.token);
+            }
+            localStorage.setItem('user', JSON.stringify(res.data));
+
             if (rememberMe) {
                 localStorage.setItem('savedEmail', email);
             } else {

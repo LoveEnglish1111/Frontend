@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
                 if (token && storedUser) {
                     const userData = JSON.parse(storedUser);
                     setUser(userData);
+                    setUserId(userData._id);
                     setIsAuthenticated(true);
                 }
             } catch (error) {
@@ -49,14 +50,24 @@ export const AuthProvider = ({ children }) => {
         setUser(user);
         setUserId(user._id);
         setIsAuthenticated(true);
+
+        // Persist session to localStorage so refresh doesn't break auth
+        if (user?.token) {
+            localStorage.setItem('authToken', user.token);
+        }
+        localStorage.setItem('user', JSON.stringify(user));
+        setIsLoading(false);
     };
 
     // Sign out
     const signout = async () => {
         setIsLoading(true);
         try {
-            await mockAuthApi.logout();
+            // Cleanup localStorage session data
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
             setUser(null);
+            setUserId(null);
             setIsAuthenticated(false);
             setAuthError(null);
         } catch (error) {
