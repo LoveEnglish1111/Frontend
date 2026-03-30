@@ -138,17 +138,17 @@ export default function Home() {
             variant="outline"
             size="md"
             className="w-full text-center"
-            onClick={() => incrementStat("postsShared")}
+            onClick={() => incrementStat("dayStreak")}
           >
-            💬 Share Post
+            🔥 Daily Streak
           </Button>
           <Button
             variant="outline"
             size="md"
             className="w-full text-center"
-            onClick={() => incrementStat("dayStreak")}
+            onClick={() => incrementStat("postsShared")}
           >
-            🔥 Daily Streak
+            💬 Share Post
           </Button>
           <Button
             variant="outline"
