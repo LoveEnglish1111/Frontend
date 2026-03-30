@@ -114,10 +114,28 @@ export default function Profile() {
       return;
     }
 
-    // TODO: Call API to change password
-    // axios.post(`${URL}/change-password`, {...})
-    alert("Mật khẩu đã được thay đổi thành công");
-    handleCloseSettings();
+    // Call API to change password
+    axios
+      .post(`${URL}/change-password`, {
+        userId: user._id,
+        oldPassword: passwordData.oldPassword,
+        newPassword: passwordData.newPassword,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          alert("Mật khẩu đã được thay đổi thành công");
+          handleCloseSettings();
+        } else {
+          alert(res.data.message || "Thay đổi mật khẩu thất bại");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(
+          error.response?.data?.message ||
+            "Lỗi: Mật khẩu hiện tại không đúng hoặc có lỗi server",
+        );
+      });
   };
 
   return (
