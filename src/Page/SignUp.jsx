@@ -5,8 +5,6 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import URL from '../api/UserApi';
-import axios from 'axios';
 
 export default function SignUp() {
     const [formData, setFormData] = useState({

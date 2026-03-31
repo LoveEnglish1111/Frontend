@@ -2,10 +2,30 @@ import { BookOpen, Play, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import ProgressBar from './ProgressBar';
+import { useStudy } from '../context/studyContext';
+import { useEffect, useState } from 'react';
+// import axios from 'axios';
+// import URL from '../api/UserApi';
 
 export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
     const navigate = useNavigate();
+    const [cardsNumber, setCardsNumber] = useState(0);
+    const [learned, setLearned] = useState(0);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const res = await axios.get(
+    //                 `${URL}/vocabulary?flashCard_id=${set._id}`,
+    //             );
+    //             setCardsNumber(res.data[0].Vocabulary.length);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     };
 
+    //     fetchData();
+    // }, []);
+    
     const categoryColors = {
         Grammar: 'from-blue-50 to-blue-100',
         Vocabulary: 'from-purple-50 to-purple-100',
@@ -54,10 +74,10 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                         Progress
                     </p>
                     <ProgressBar
-                        current={set.learned}
-                        total={set.total}
+                        current={0}
+                        total={cardsNumber}
                         color={
-                            set.learned === set.total ? 'success' : 'primary'
+                            0 === cardsNumber ? 'success' : 'primary'
                         }
                     />
                 </div>
@@ -66,19 +86,19 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                 <div className="grid grid-cols-3 gap-2 text-center py-3 border-y border-border">
                     <div>
                         <p className="text-lg font-bold text-foreground">
-                            {set.total}
+                            {cardsNumber}
                         </p>
                         <p className="text-xs text-muted-foreground">Cards</p>
                     </div>
                     <div>
                         <p className="text-lg font-bold text-primary-600">
-                            {set.learned}
+                            {learned}
                         </p>
                         <p className="text-xs text-muted-foreground">Learned</p>
                     </div>
                     <div>
                         <p className="text-lg font-bold text-warning">
-                            {set.reviews}
+                            {0}
                         </p>
                         <p className="text-xs text-muted-foreground">Reviews</p>
                     </div>
@@ -109,7 +129,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                 </div>
 
                 {/* Footer */}
-                {set.learned === set.total ? (
+                {learned === cardsNumber ? (
                     <div className="text-center py-2 bg-success bg-opacity-10 rounded-lg">
                         <p className="text-xs font-semibold text-success">
                             ✅ Mastered! Keep reviewing
@@ -118,7 +138,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                 ) : (
                     <div className="text-center py-2 bg-primary-50 rounded-lg">
                         <p className="text-xs font-semibold text-primary-600">
-                            {set.total - set.learned} cards left to learn
+                            {cardsNumber - learned} cards left to learn
                         </p>
                     </div>
                 )}

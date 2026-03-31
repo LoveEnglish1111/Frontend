@@ -66,15 +66,15 @@ export default function StudySets() {
         return categoryMatch && searchMatch;
     });
 
-    const handleStudyClick = (set) => {
+    const handleStudyClick = async (set) => {
         // navigate to study mode
-        ChangeStudyData(set);
+        await ChangeStudyData(set);
         navigate(`/StudySets/study/${set._id}`);
     };
 
-    const handleQuizClick = (set) => {
+    const handleQuizClick = async (set) => {
         // navigate to quiz mode
-        ChangeStudyData(set);
+        await ChangeStudyData(set);
         navigate(`/StudySets/quiz/${set._id}`);
     };
 
