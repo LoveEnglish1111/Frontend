@@ -28,6 +28,12 @@ export default function Profile() {
     const [isEditing, setIsEditing] = useState(false);
     const [editedUsername, setEditedUsername] = useState(user?.username || '');
     const [editedAvatar, setEditedAvatar] = useState(user?.avatar || '');
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [passwordData, setPasswordData] = useState({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+    });
 
     useEffect(() => {
         const fetchData = async () => {
@@ -75,6 +81,63 @@ export default function Profile() {
         user.username = editedUsername;
         user.avatar = editedAvatar;
         setIsEditing(false);
+    };
+
+    const handleOpenSettings = () => {
+        setIsSettingsOpen(true);
+    };
+
+    const handleCloseSettings = () => {
+        setIsSettingsOpen(false);
+        setPasswordData({
+            oldPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+        });
+    };
+
+    const handleChangePassword = () => {
+        if (
+            !passwordData.oldPassword ||
+            !passwordData.newPassword ||
+            !passwordData.confirmPassword
+        ) {
+            alert('Vui lòng điền đầy đủ các trường');
+            return;
+        }
+
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            alert('Mật khẩu mới không khớp');
+            return;
+        }
+
+        if (passwordData.newPassword.length < 6) {
+            alert('Mật khẩu mới phải có ít nhất 6 ký tự');
+            return;
+        }
+
+        // Call API to change password
+        axios
+            .post(`${URL}/change-password`, {
+                userId: user._id,
+                oldPassword: passwordData.oldPassword,
+                newPassword: passwordData.newPassword,
+            })
+            .then((res) => {
+                if (res.data.success) {
+                    alert('Mật khẩu đã được thay đổi thành công');
+                    handleCloseSettings();
+                } else {
+                    alert(res.data.message || 'Thay đổi mật khẩu thất bại');
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                alert(
+                    error.response?.data?.message ||
+                        'Lỗi: Mật khẩu hiện tại không đúng hoặc có lỗi server',
+                );
+            });
     };
 
     return (
@@ -189,6 +252,7 @@ export default function Profile() {
                                 variant="outline"
                                 size="md"
                                 className="flex items-center justify-center gap-2 flex-1 md:flex-none"
+                                onClick={handleOpenSettings}
                             >
                                 <Settings size={16} />
                                 Settings
@@ -370,6 +434,91 @@ export default function Profile() {
                         ))}
                     </div>
                 </div>
+
+                {/* Settings Modal */}
+                {isSettingsOpen && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-lg">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-2xl font-bold text-foreground">
+                                    Change Password
+                                </h2>
+                                <button
+                                    onClick={handleCloseSettings}
+                                    className="text-muted-foreground hover:text-foreground transition-colors"
+                                >
+                                    <X size={24} />
+                                </button>
+                            </div>
+
+                            <div className="space-y-4 mb-6">
+                                <div>
+                                    <Input
+                                        label="Current Password"
+                                        type="password"
+                                        placeholder="Enter your current password"
+                                        value={passwordData.oldPassword}
+                                        onChange={(e) =>
+                                            setPasswordData({
+                                                ...passwordData,
+                                                oldPassword: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+
+                                <div>
+                                    <Input
+                                        label="New Password"
+                                        type="password"
+                                        placeholder="Enter new password"
+                                        value={passwordData.newPassword}
+                                        onChange={(e) =>
+                                            setPasswordData({
+                                                ...passwordData,
+                                                newPassword: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+
+                                <div>
+                                    <Input
+                                        label="Confirm Password"
+                                        type="password"
+                                        placeholder="Confirm new password"
+                                        value={passwordData.confirmPassword}
+                                        onChange={(e) =>
+                                            setPasswordData({
+                                                ...passwordData,
+                                                confirmPassword: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <Button
+                                    variant="primary"
+                                    size="md"
+                                    className="flex-1"
+                                    onClick={handleChangePassword}
+                                >
+                                    Change Password
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="md"
+                                    className="flex-1"
+                                    onClick={handleCloseSettings}
+                                >
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

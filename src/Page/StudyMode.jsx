@@ -3,29 +3,10 @@ import { ArrowLeft } from 'lucide-react';
 import Study from '../components/Flashcard/Study.jsx';
 // import Button from '../components/Button';
 import { useStudy } from '../context/studyContext.jsx';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import URL from '../api/UserApi.jsx';
 
 export default function StudyMode() {
     const navigate = useNavigate();
-    const { studyData } = useStudy();
-    const [vocabularyData, setVocabularyData] = useState([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await axios.get(
-                    `${URL}/vocabulary?flashCard_id=${studyData._id}`,
-                );
-                setVocabularyData(res.data[0].Vocabulary);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        fetchData();
-    }, []);
+    const { studyData, vocabularyData } = useStudy();
 
     return (
         <div className="min-h-screen bg-slate-50">

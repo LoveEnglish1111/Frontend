@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
+import URL from '../api/UserApi';
 
 // Auth Context
 const AuthContext = createContext();
@@ -39,12 +41,35 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     // Sign up
-    const signup = async () => {
-        setIsLoading(false);
-        setAuthError(null);
+    const signup = async (formData) => {
+		const result = {
+			success : false,
+			newErrors : {}
+		}
+		setIsLoading(true);
+        try {
+            const res = await axios.post(`${URL}/auth/register`, formData);
+            result.success = true;
+			return result;
+        } catch (error) {
+            var message = error.response.data.message;
+            var At = error.response.data.At;
+            if (At == 'username')
+                result.newErrors.fullName = message;
+            else if (At == 'email')
+                result.newErrors.email = message;
+            else if (At == 'password')
+                result.newErrors.password = message;
+			return result;
+        } finally {
+			setIsLoading(false);
+		}
+
+        // setAuthError(null);
     };
 
     // Sign in
+nhanh-moi-cua-toi
     const signin = async (user) => {
         setAuthError(null);
         setUser(user);
@@ -57,21 +82,68 @@ export const AuthProvider = ({ children }) => {
         }
         localStorage.setItem('user', JSON.stringify(user));
         setIsLoading(false);
+
+    const signin = async (email, password) => {
+		const result = {
+			success : false,
+			newErrors : {}
+		}
+		setIsLoading(true);
+		try {
+            const res = await axios.get(
+                `${URL}/auth/login?email=${email}&password=${password}`,
+            );
+			setAuthError(null);
+			setUser(res.data);
+			setUserId(res.data._id);
+			setIsAuthenticated(true);
+			result.success = true;
+			return result;
+			
+
+        } catch (error) {
+            var message = error.response.data.message;
+			var At = error.response.data.At;
+            if (At == 'Email') result.newErrors.email = message;
+            else if (At == 'Password')
+                result.newErrors.password = message;
+            else {
+                result.newErrors.email = result.newErrors.password = message;
+            }
+            return result;
+        } finally {
+			setIsLoading(false);
+		}
+
+ main
     };
 
     // Sign out
     const signout = async () => {
         setIsLoading(true);
         try {
+ nhanh-moi-cua-toi
             // Cleanup localStorage session data
             localStorage.removeItem('authToken');
             localStorage.removeItem('user');
+
+ main
             setUser(null);
             setUserId(null);
             setIsAuthenticated(false);
             setAuthError(null);
+			setUserId(null);
+            // Clear localStorage
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            // Navigate to login
+            window.location.href = '/SignIn';
         } catch (error) {
             console.error('Logout error:', error);
+            // Even if API call fails, still clear local storage
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            window.location.href = '/SignIn';
         } finally {
             setIsLoading(false);
         }

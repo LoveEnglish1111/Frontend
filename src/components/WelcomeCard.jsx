@@ -3,6 +3,7 @@ import { BookOpen, Users, Zap, User } from 'lucide-react';
 import Button from './Button';
 
 export default function WelcomeCard({ userName = 'John' }) {
+    const navigate = useNavigate();
     const currentHour = new Date().getHours();
     let greeting = 'Good Morning';
     if (currentHour >= 12 && currentHour < 18) greeting = 'Good Afternoon';
@@ -30,6 +31,7 @@ export default function WelcomeCard({ userName = 'John' }) {
                         variant="outline"
                         size="md"
                         className="border-white text-white hover:bg-white hover:bg-opacity-10"
+                        onClick={() => navigate('/StudySets')}
                     >
                         Start Learning
                     </Button>
@@ -37,6 +39,7 @@ export default function WelcomeCard({ userName = 'John' }) {
                         variant="outline"
                         size="md"
                         className="border-white text-white hover:bg-white hover:bg-opacity-10"
+                        onClick={() => navigate('/Profile')}
                     >
                         View Progress
                     </Button>

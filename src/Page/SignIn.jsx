@@ -5,8 +5,6 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import axios from 'axios';
-import URL from '../api/UserApi';
 
 export default function SignIn() {
     const [email, setEmail] = useState(
@@ -30,6 +28,7 @@ export default function SignIn() {
         e.preventDefault();
         setErrors({});
 
+nhanh-moi-cua-toi
         try {
             const res = await axios.get(
                 `${URL}/auth/login?email=${email}&password=${password}`,
@@ -40,6 +39,10 @@ export default function SignIn() {
             }
             localStorage.setItem('user', JSON.stringify(res.data));
 
+
+        const result = await signin(email, password);
+        if (result.success == true) {
+ main
             if (rememberMe) {
                 localStorage.setItem('savedEmail', email);
             } else {
@@ -48,17 +51,8 @@ export default function SignIn() {
             toast.success('🎉 Signed in successfully!');
             const from = location.state?.from?.pathname || '/';
             setTimeout(() => navigate(from), 500);
-        } catch (error) {
-            var message = error.response.data.message;
-            const newErrors = {};
-            if (error.response.data.At == 'Email') newErrors.email = message;
-            else if (error.response.data.At == 'Password')
-                newErrors.password = message;
-            else {
-                newErrors.email = newErrors.password = message;
-            }
-            setErrors(newErrors);
-            return;
+        } else {
+            setErrors(result.newErrors);
         }
     };
 

@@ -84,6 +84,7 @@ export default function StudySets() {
         return categoryMatch && searchMatch;
     });
 
+ nhanh-moi-cua-toi
     const handleStudyClick = (set) => {
         ChangeStudyData(set);
         navigate(`/StudySets/study/${set._id}`);
@@ -91,6 +92,17 @@ export default function StudySets() {
 
     const handleQuizClick = (set) => {
         ChangeStudyData(set);
+
+    const handleStudyClick = async (set) => {
+        // navigate to study mode
+        await ChangeStudyData(set);
+        navigate(`/StudySets/study/${set._id}`);
+    };
+
+    const handleQuizClick = async (set) => {
+        // navigate to quiz mode
+        await ChangeStudyData(set);
+ main
         navigate(`/StudySets/quiz/${set._id}`);
     };
 
