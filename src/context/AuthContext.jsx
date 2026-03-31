@@ -40,9 +40,31 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     // Sign up
-    const signup = async () => {
-        setIsLoading(false);
-        setAuthError(null);
+    const signup = async (formData) => {
+		const result = {
+			success : false,
+			newErrors : {}
+		}
+		setIsLoading(true);
+        try {
+            const res = await axios.post(`${URL}/auth/register`, formData);
+            result.success = true;
+			return result;
+        } catch (error) {
+            var message = error.response.data.message;
+            var At = error.response.data.At;
+            if (At == 'username')
+                result.newErrors.fullName = message;
+            else if (At == 'email')
+                result.newErrors.email = message;
+            else if (At == 'password')
+                result.newErrors.password = message;
+			return result;
+        } finally {
+			setIsLoading(false);
+		}
+
+        // setAuthError(null);
     };
 
     // Sign in
@@ -84,10 +106,10 @@ export const AuthProvider = ({ children }) => {
     const signout = async () => {
         setIsLoading(true);
         try {
-            await mockAuthApi.logout();
             setUser(null);
             setIsAuthenticated(false);
             setAuthError(null);
+			setUserId(null);
             // Clear localStorage
             localStorage.removeItem('authToken');
             localStorage.removeItem('user');

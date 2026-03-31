@@ -83,36 +83,23 @@ export default function SignUp() {
         e.preventDefault();
         setErrors({});
 
-        const newErrors = {};
         if (!agreeToTerms) {
-            newErrors.terms = 'You must agree to the terms';
-            setErrors(newErrors);
+            setErrors({terms : 'You must agree to the terms'});
             return;
         }
 
-        try {
-            const res = await axios.post(`${URL}/auth/register`, formData);
+        const result = await signup(formData);
+        if (result.success) {
             toast.success('🎉 Account created successfully! Redirecting...');
             setTimeout(() => navigate('/SignIn'), 1500);
-        } catch (error) {
-            var message = error.response.data.message;
-            var At = error.response.data.At;
-            console.log(message, At);
-            if (error.response.data.At == 'username')
-                newErrors.fullName = message;
-            else if (error.response.data.At == 'email')
-                newErrors.email = message;
-            else if (error.response.data.At == 'password')
-                newErrors.password = message;
-            if (Object.keys(newErrors).length > 0) {
-                setErrors(newErrors);
-                return;
-            }
+        }
+        else {
+            setErrors(result.newErrors);
         }
     };
 
     return (
-        <div className="min-h-screen w-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center p-4 py-8">
+        <div className="min-h-screen w-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center p-4 py-8 overflow-hidden">
             <div className="w-full max-w-md">
                 {/* Logo / Branding */}
                 <div className="text-center mb-8">
