@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
                 if (token && storedUser) {
                     const userData = JSON.parse(storedUser);
                     setUser(userData);
+                    setUserId(userData._id);
                     setIsAuthenticated(true);
                 }
             } catch (error) {
@@ -68,6 +69,20 @@ export const AuthProvider = ({ children }) => {
     };
 
     // Sign in
+nhanh-moi-cua-toi
+    const signin = async (user) => {
+        setAuthError(null);
+        setUser(user);
+        setUserId(user._id);
+        setIsAuthenticated(true);
+
+        // Persist session to localStorage so refresh doesn't break auth
+        if (user?.token) {
+            localStorage.setItem('authToken', user.token);
+        }
+        localStorage.setItem('user', JSON.stringify(user));
+        setIsLoading(false);
+
     const signin = async (email, password) => {
 		const result = {
 			success : false,
@@ -100,13 +115,21 @@ export const AuthProvider = ({ children }) => {
 			setIsLoading(false);
 		}
 
+ main
     };
 
     // Sign out
     const signout = async () => {
         setIsLoading(true);
         try {
+ nhanh-moi-cua-toi
+            // Cleanup localStorage session data
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+
+ main
             setUser(null);
+            setUserId(null);
             setIsAuthenticated(false);
             setAuthError(null);
 			setUserId(null);
