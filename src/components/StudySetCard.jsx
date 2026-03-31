@@ -9,8 +9,6 @@ import { useEffect, useState } from 'react';
 
 export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
     const navigate = useNavigate();
-    const [cardsNumber, setCardsNumber] = useState(0);
-    const [learned, setLearned] = useState(0);
     // useEffect(() => {
     //     const fetchData = async () => {
     //         try {
@@ -75,9 +73,9 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                     </p>
                     <ProgressBar
                         current={0}
-                        total={cardsNumber}
+                        total={set.total}
                         color={
-                            0 === cardsNumber ? 'success' : 'primary'
+                            0 === set.total ? 'success' : 'primary'
                         }
                     />
                 </div>
@@ -86,19 +84,19 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                 <div className="grid grid-cols-3 gap-2 text-center py-3 border-y border-border">
                     <div>
                         <p className="text-lg font-bold text-foreground">
-                            {cardsNumber}
+                            {set.total}
                         </p>
                         <p className="text-xs text-muted-foreground">Cards</p>
                     </div>
                     <div>
                         <p className="text-lg font-bold text-primary-600">
-                            {learned}
+                            {set.learned}
                         </p>
                         <p className="text-xs text-muted-foreground">Learned</p>
                     </div>
                     <div>
                         <p className="text-lg font-bold text-warning">
-                            {0}
+                            {set.reviews}
                         </p>
                         <p className="text-xs text-muted-foreground">Reviews</p>
                     </div>
@@ -129,7 +127,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                 </div>
 
                 {/* Footer */}
-                {learned === cardsNumber ? (
+                {set.learned === set.total ? (
                     <div className="text-center py-2 bg-success bg-opacity-10 rounded-lg">
                         <p className="text-xs font-semibold text-success">
                             ✅ Mastered! Keep reviewing
@@ -138,7 +136,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                 ) : (
                     <div className="text-center py-2 bg-primary-50 rounded-lg">
                         <p className="text-xs font-semibold text-primary-600">
-                            {cardsNumber - learned} cards left to learn
+                            {set.total - set.learned} cards left to learn
                         </p>
                     </div>
                 )}
