@@ -30,11 +30,8 @@ export default function SignIn() {
         e.preventDefault();
         setErrors({});
 
-        try {
-            const res = await axios.get(
-                `${URL}/auth/login?email=${email}&password=${password}`,
-            );
-            signin(res.data);
+        const result = await signin(email, password);
+        if (result.success == true) {
             if (rememberMe) {
                 localStorage.setItem('savedEmail', email);
             } else {
@@ -43,17 +40,8 @@ export default function SignIn() {
             toast.success('🎉 Signed in successfully!');
             const from = location.state?.from?.pathname || '/';
             setTimeout(() => navigate(from), 500);
-        } catch (error) {
-            var message = error.response.data.message;
-            const newErrors = {};
-            if (error.response.data.At == 'Email') newErrors.email = message;
-            else if (error.response.data.At == 'Password')
-                newErrors.password = message;
-            else {
-                newErrors.email = newErrors.password = message;
-            }
-            setErrors(newErrors);
-            return;
+        } else {
+            setErrors(result.newErrors);
         }
     };
 
