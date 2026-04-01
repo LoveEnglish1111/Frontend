@@ -28,8 +28,21 @@ export default function SignIn() {
         e.preventDefault();
         setErrors({});
 
+nhanh-moi-cua-toi
+        try {
+            const res = await axios.get(
+                `${URL}/auth/login?email=${email}&password=${password}`,
+            );
+            signin(res.data);
+            if (res.data?.token) {
+                localStorage.setItem('authToken', res.data.token);
+            }
+            localStorage.setItem('user', JSON.stringify(res.data));
+
+
         const result = await signin(email, password);
         if (result.success == true) {
+ main
             if (rememberMe) {
                 localStorage.setItem('savedEmail', email);
             } else {
