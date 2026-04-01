@@ -13,20 +13,18 @@ import SignIn from './src/Page/User/SignIn.jsx';
 import SignUp from './src/Page/User/SignUp.jsx';
 import ForgotPassword from './src/Page/User/ForgotPassword.jsx';
 import VerifyEmail from './src/Page/User/VerifyEmail.jsx';
-// import Profile from './src/Page/User.jsx';
-import Profile from "./src/Page/User/Profile.jsx"
+import Profile from './src/Page/User/Profile.jsx';
 
 // StudySets Page
 import QuizPage from './src/Page/StudySets/QuizPage.jsx';
 import StudyMode from './src/Page/StudySets/StudyMode.jsx';
 import StudySets from './src/Page/StudySets/StudySets.jsx';
-
+import CreateNewSet from './src/Page/StudySets/CreateNewSet.jsx';
 
 // Protected Pages
 import Home from './src/Page/Home.jsx';
 import Community from './src/Page/Community.jsx';
 import AdminPanel from './src/Page/AdminPanel.jsx';
-
 
 // Study Page
 import { StudyProvider } from './src/context/studyContext.jsx';
@@ -61,25 +59,37 @@ createRoot(document.getElementById('root')).render(
                             >
                                 <Route index element={<Home />} />
 
+                                {/* Study Set Page */}
                                 <Route
                                     path="StudySets"
                                     element={<StudySets />}
                                 />
 
                                 <Route
+                                    path="StudySets/CreateNewSet"
+                                    element={<CreateNewSet />}
+                                />
+
+                                <Route
                                     path="StudySets/study/:setId"
                                     element={<StudyMode />}
                                 />
+
                                 <Route
                                     path="StudySets/quiz/:setId"
                                     element={<QuizPage />}
                                 />
 
+                                {/* Community */}
                                 <Route
                                     path="Community"
                                     element={<Community />}
                                 />
+
+                                {/* Profile */}
                                 <Route path="Profile" element={<Profile />} />
+
+                                {/* Admin Panel */}
                                 <Route
                                     path="AdminPanel"
                                     element={<AdminPanel />}

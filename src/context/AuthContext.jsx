@@ -42,28 +42,25 @@ export const AuthProvider = ({ children }) => {
 
     // Sign up
     const signup = async (formData) => {
-		const result = {
-			success : false,
-			newErrors : {}
-		}
-		setIsLoading(true);
+        const result = {
+            success: false,
+            newErrors: {},
+        };
+        setIsLoading(true);
         try {
             const res = await axios.post(`${URL}/auth/register`, formData);
             result.success = true;
-			return result;
+            return result;
         } catch (error) {
             var message = error.response.data.message;
             var At = error.response.data.At;
-            if (At == 'username')
-                result.newErrors.fullName = message;
-            else if (At == 'email')
-                result.newErrors.email = message;
-            else if (At == 'password')
-                result.newErrors.password = message;
-			return result;
+            if (At == 'username') result.newErrors.fullName = message;
+            else if (At == 'email') result.newErrors.email = message;
+            else if (At == 'password') result.newErrors.password = message;
+            return result;
         } finally {
-			setIsLoading(false);
-		}
+            setIsLoading(false);
+        }
 
         // setAuthError(null);
     };
@@ -84,36 +81,33 @@ export const AuthProvider = ({ children }) => {
     // }
 
     const signin = async (email, password) => {
-		const result = {
-			success : false,
-			newErrors : {}
-		}
-		setIsLoading(true);
-		try {
+        const result = {
+            success: false,
+            newErrors: {},
+        };
+        setIsLoading(true);
+        try {
             const res = await axios.get(
                 `${URL}/auth/login?email=${email}&password=${password}`,
             );
-			setAuthError(null);
-			setUser(res.data);
-			setUserId(res.data._id);
-			setIsAuthenticated(true);
-			result.success = true;
-			return result;
-			
-
+            setAuthError(null);
+            setUser(res.data);
+            setUserId(res.data._id);
+            setIsAuthenticated(true);
+            result.success = true;
+            return result;
         } catch (error) {
             var message = error.response.data.message;
-			var At = error.response.data.At;
+            var At = error.response.data.At;
             if (At == 'Email') result.newErrors.email = message;
-            else if (At == 'Password')
-                result.newErrors.password = message;
+            else if (At == 'Password') result.newErrors.password = message;
             else {
                 result.newErrors.email = result.newErrors.password = message;
             }
             return result;
         } finally {
-			setIsLoading(false);
-		}
+            setIsLoading(false);
+        }
     };
 
     // Sign out
@@ -127,7 +121,7 @@ export const AuthProvider = ({ children }) => {
             setUserId(null);
             setIsAuthenticated(false);
             setAuthError(null);
-			setUserId(null);
+            setUserId(null);
             // Clear localStorage
             localStorage.removeItem('authToken');
             localStorage.removeItem('user');

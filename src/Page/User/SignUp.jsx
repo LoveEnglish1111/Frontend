@@ -82,7 +82,7 @@ export default function SignUp() {
         setErrors({});
 
         if (!agreeToTerms) {
-            setErrors({terms : 'You must agree to the terms'});
+            setErrors({ terms: 'You must agree to the terms' });
             return;
         }
 
@@ -90,8 +90,7 @@ export default function SignUp() {
         if (result.success) {
             toast.success('🎉 Account created successfully! Redirecting...');
             setTimeout(() => navigate('/SignIn'), 1500);
-        }
-        else {
+        } else {
             setErrors(result.newErrors);
         }
     };

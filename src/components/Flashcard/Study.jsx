@@ -3,7 +3,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Flashcard from './Flashcard';
 import { useStudy } from '../../context/studyContext';
 
-export default function Study({ cards = [], courseTitle = '', learned, handleMarkLearned}) {
+export default function Study({
+    cards = [],
+    courseTitle = '',
+    learned,
+    handleMarkLearned,
+}) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     if (!cards || cards.length === 0) {

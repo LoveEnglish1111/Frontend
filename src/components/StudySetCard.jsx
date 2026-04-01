@@ -56,9 +56,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                     <ProgressBar
                         current={0}
                         total={set.total}
-                        color={
-                            0 === set.total ? 'success' : 'primary'
-                        }
+                        color={0 === set.total ? 'success' : 'primary'}
                     />
                 </div>
 

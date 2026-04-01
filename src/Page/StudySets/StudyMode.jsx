@@ -16,7 +16,7 @@ export default function StudyMode() {
         const newLearned = new Set();
 
         for (let i = 0; i < markLearned.length; i++) {
-            if (markLearned[i] === "1") {
+            if (markLearned[i] === '1') {
                 newLearned.add(i);
             }
         }
@@ -35,9 +35,8 @@ export default function StudyMode() {
 
     const handleBackToStudySets = async () => {
         await updateMarkLearned(learned);
-        navigate('/StudySets')
-    }
-    
+        navigate('/StudySets');
+    };
 
     return (
         <div className="min-h-screen bg-slate-50">
@@ -61,9 +60,9 @@ export default function StudyMode() {
             <div className="max-w-6xl mx-auto py-8">
                 <Study
                     cards={vocabularyData.Vocabulary}
-                    learned = {learned}
+                    learned={learned}
                     courseTitle={`Study Set: ${studyData.title}`}
-                    handleMarkLearned = {handleMarkLearned}
+                    handleMarkLearned={handleMarkLearned}
                 />
             </div>
         </div>

@@ -7,7 +7,6 @@ import { useAuth } from '../context/AuthContext';
  */
 export default function ProtectedRoute({ children }) {
     const { isAuthenticated, isLoading } = useAuth();
-    console.log(isAuthenticated, isLoading, children);
 
     // Nếu đang loading, hiển thị loading state
     if (isLoading) {

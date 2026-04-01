@@ -7,7 +7,7 @@ import {
     useLocation,
 } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import logoImgage from "/Logo.png"
+import logoImgage from '/Logo.png';
 
 const SidebarContext = createContext();
 
@@ -27,9 +27,12 @@ export default function Sidebar({ children }) {
                 {/* Header - Logo Section */}
                 <div className="p-4 pb-2 flex justify-between items-center border-b border-border">
                     {expanded && (
-                        <div className='flex items-center select-none'>
-                            <div className='w-[50px] h-[50px] mr-[5px] overflow-hidden rounded-[20px]'>
-                                <img src={logoImgage} className='w-full h-full object-cover object-center'/>
+                        <div className="flex items-center select-none">
+                            <div className="w-[50px] h-[50px] mr-[5px] overflow-hidden rounded-[20px]">
+                                <img
+                                    src={logoImgage}
+                                    className="w-full h-full object-cover object-center"
+                                />
                             </div>
 
                             <div className="flex flex-col">

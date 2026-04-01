@@ -6,6 +6,7 @@ export default function Input({
     fullWidth = true,
     className = '',
     containerClassName = '',
+    fontLabelSize = -1,
     ...props
 }) {
     const baseStyles =
@@ -20,7 +21,7 @@ export default function Input({
     return (
         <div className={`${fullWidth ? 'w-full' : ''} ${containerClassName}`}>
             {label && (
-                <label className="block text-sm font-semibold text-foreground mb-2">
+                <label className={`block text-sm font-semibold text-foreground mb-2 ${fontLabelSize != -1 ? `text-[${fontLabelSize}px]` : ""}`}>
                     {label}
                     {props.required && (
                         <span className="text-destructive ml-1">*</span>

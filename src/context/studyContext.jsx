@@ -18,24 +18,38 @@ export const StudyProvider = ({ children }) => {
         }
     }
 
+    async function updateVocabularyData(newVocabularyData) {
+        try {
+            const res = await axios.post(
+                `${URL}/vocabulary/update`,newVocabularyData);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function updatestudyData(newStudyData) {
+        try {
+            const res = await axios.post(
+                `${URL}/StudySets/update`,
+                newStudyData
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async function updateMarkLearned(learned) {
-        var MarkLearned = "";
-        var cnt = 0;
+        var MarkLearned = '';
+        var countLearned = 0;
         for (let i = 0; i < studyData.total; i++) {
             const isLearnHas = learned.has(i);
-            MarkLearned += isLearnHas ? "1" : "0";
-            cnt += isLearnHas ? 1 : 0;
+            MarkLearned += isLearnHas ? '1' : '0';
+            countLearned += isLearnHas ? 1 : 0;
         }
-        
-        // try {
-        //     const res = await axios.post(
-        //         `${URL}/vocabulary/update?flashCard_id=${data._id}`,
-        //         vocabularyData
-        //     );
-        // } catch (error) {
-        //     console.log(error);
-        // }
-        
+        vocabularyData.MarkLearned = MarkLearned;
+        studyData.learned = countLearned;
+        await updateVocabularyData(vocabularyData);
+        updatestudyData(studyData);
     }
 
     const value = {

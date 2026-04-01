@@ -41,7 +41,7 @@ export default function SignIn() {
         } else {
             setErrors(result.newErrors);
         }
-    }
+    };
 
     return (
         <div className="min-h-screen w-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center p-4">
