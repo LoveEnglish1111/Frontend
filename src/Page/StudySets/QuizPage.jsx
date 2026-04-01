@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import QuizMode from '../components/QuizMode.jsx';
+// import QuizMode from '../../../components/QuizMode.jsx';
+import QuizMode from '../../components/QuizMode';
 
 export default function QuizPage() {
     const { setId } = useParams();

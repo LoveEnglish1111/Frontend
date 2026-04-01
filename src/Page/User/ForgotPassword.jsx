@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail } from 'lucide-react';
-import Button from '../components/Button';
-import Input from '../components/Input';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('');

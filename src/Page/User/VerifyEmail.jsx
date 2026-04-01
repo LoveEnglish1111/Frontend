@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Mail, CheckCircle } from 'lucide-react';
-import Button from '../components/Button';
-import Input from '../components/Input';
-import { useAuth } from '../context/AuthContext';
+import Button from "../../components/Button";
+import Input from "../../components/Input";
+import { useAuth } from '../../context/AuthContext';
 
 export default function VerifyEmail() {
     const [code, setCode] = useState('');

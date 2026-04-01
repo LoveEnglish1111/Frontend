@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Github, Chrome } from 'lucide-react';
-import Button from '../components/Button';
-import Input from '../components/Input';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 
 export default function SignIn() {
     const [email, setEmail] = useState(

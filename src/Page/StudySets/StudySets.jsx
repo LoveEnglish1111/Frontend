@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Plus, Search, X, Trash2 } from 'lucide-react';
-import Button from '../components/Button';
-import StudySetCard from '../components/StudySetCard';
-import Input from '../components/Input';
+import Button from '../../components/Button.jsx';
+import StudySetCard from '../../components/StudySetCard.jsx';
+import Input from '../../components/Input.jsx';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
-import { useStudy } from '../context/studyContext.jsx';
-import URL from '../api/UserApi.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
+import { useStudy } from '../../context/studyContext.jsx';
+import URL from '../../api/UserApi.jsx';
 
 export default function StudySets() {
     const [searchParams] = useSearchParams();

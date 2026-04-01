@@ -1,4 +1,4 @@
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import {
     Edit2,
     Settings,
@@ -10,14 +10,14 @@ import {
     X,
     Check,
 } from 'lucide-react';
-import Button from '../components/Button';
-import Input from '../components/Input';
-import AchievementBadge from '../components/AchievementBadge';
-import LearningStreak from '../components/LearningStreak';
-import StatCircle from '../components/StatCircle';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import AchievementBadge from '../../components/AchievementBadge';
+import LearningStreak from '../../components/LearningStreak';
+import StatCircle from '../../components/StatCircle';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import URL from '../api/UserApi';
+import URL from '../../api/UserApi';
 
 export default function Profile() {
     const { user, signout } = useAuth();

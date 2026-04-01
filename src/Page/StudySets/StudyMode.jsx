@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import Study from '../components/Flashcard/Study.jsx';
+import Study from '../../components/Flashcard/Study.jsx';
 // import Button from '../components/Button';
-import { useStudy } from '../context/studyContext.jsx';
+import { useStudy } from '../../context/studyContext.jsx';
 import { useState, useEffect } from 'react';
 
 export default function StudyMode() {

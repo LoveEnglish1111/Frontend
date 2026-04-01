@@ -1,7 +1,7 @@
 import { BookOpen, Play, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
-import ProgressBar from '../components/ProgressBar';
+import Button from '../../components/Button';
+import ProgressBar from '../../components/ProgressBar';
 
 export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
     const navigate = useNavigate();
