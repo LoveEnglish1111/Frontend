@@ -188,19 +188,6 @@ export default function SignIn() {
                         </Link>
                     </p>
                 </div>
-
-                <div>
-                    <h1>Bạn có thể vô 2 tài khoảng này</h1>
-                    <div>
-                        <h2>email: stevehanji@gmail.com</h2>
-                        <h2>password: 12345678</h2>
-                    </div>
-
-                    <div>
-                        <h2>email: tankietdepzai@gmail.com</h2>
-                        <h2>password: 12345678</h2>
-                    </div>
-                </div>
                 {/* Footer */}
                 <p className="text-center text-muted-foreground text-xs mt-6">
                     By signing in, you agree to our{' '}

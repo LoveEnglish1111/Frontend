@@ -1,6 +1,8 @@
 export default function ProgressBar({ current, total, color = 'primary' }) {
     const percentage = (current / total) * 100;
 
+    // console.log(current, total)
+
     const colorClasses = {
         primary: 'bg-primary-600',
         success: 'bg-success',

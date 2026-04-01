@@ -109,13 +109,14 @@ onClick={() => onQuizClick && onQuizClick(set._id)}
                 {/* Footer */}
                 {set.learned === set.total ? (
                     <div className="text-center py-2 bg-success bg-opacity-10 rounded-lg">
-                        <p className="text-xs font-semibold text-success">
+                        <p className="text-xs font-semibold text-white
+">
                             ✅ Mastered! Keep reviewing
                         </p>
                     </div>
                 ) : (
                     <div className="text-center py-2 bg-primary-50 rounded-lg">
-                        <p className="text-xs font-semibold text-primary-600">
+                        <p className="font-semibold text-primary-600">
                             {set.total - set.learned} cards left to learn
                         </p>
                     </div>

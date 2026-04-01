@@ -4,6 +4,7 @@ import Button from './Button';
 import ProgressBar from './ProgressBar';
 import { useStudy } from '../context/studyContext';
 import { useEffect, useState } from 'react';
+
 export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
     const navigate = useNavigate();
     const categoryColors = {
@@ -54,7 +55,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                         Progress
                     </p>
                     <ProgressBar
-                        current={0}
+                        current={set.learned}
                         total={set.total}
                         color={0 === set.total ? 'success' : 'primary'}
                     />
@@ -109,9 +110,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                 {/* Footer */}
                 {set.learned === set.total ? (
                     <div className="text-center py-2 bg-success bg-opacity-10 rounded-lg">
-                        <p className="text-xs font-semibold text-success">
-                            ✅ Mastered! Keep reviewing
-                        </p>
+                        <p className="text-xs font-semibold text-white">✅ Mastered! Keep reviewing</p>
                     </div>
                 ) : (
                     <div className="text-center py-2 bg-primary-50 rounded-lg">
