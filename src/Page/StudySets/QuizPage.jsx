@@ -12,6 +12,7 @@ export default function QuizPage() {
     const navigate = useNavigate();
     const { vocabularyData, studyData } = useStudy();
     const [quizMode, setQuizMode] = useState(null);
+    const [shuffledCards, setShuffledCards] = useState([]);
     const [localCards, setLocalCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -61,7 +62,19 @@ export default function QuizPage() {
         fetchCards();
     }, [setId]);
 
+    const shuffleArray = (array) => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    };
+
     const selectMode = (mode) => {
+        if (mode === 'tracnghiem' && cards.length > 0) {
+            setShuffledCards(shuffleArray(cards));
+        }
         setQuizMode(mode);
     };
 
@@ -148,7 +161,7 @@ export default function QuizPage() {
                 ) : (
                     <QuizMode 
                         mode={quizMode} 
-                        cards={cards} 
+                        cards={quizMode === 'tracnghiem' ? shuffledCards : cards} 
                         studySetId={setId}
                         onReset={resetMode}
                     />
