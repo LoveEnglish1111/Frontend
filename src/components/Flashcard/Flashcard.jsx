@@ -7,7 +7,7 @@ export default function Flashcard(props) {
         <div className="card-container" onClick={() => setFlipped(!flipped)}>
             <div className={`card ${flipped ? 'flipped' : ''}`}>
                 <div className="front">{props.Vocabulary.en}</div>
-                <div className="back">{props.Vocabulary.vi}</div>
+                <div className="back">{props.Vocabulary.vn}</div>
             </div>
         </div>
     );

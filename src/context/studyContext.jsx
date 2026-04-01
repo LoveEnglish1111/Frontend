@@ -1,11 +1,13 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import URL from '../api/UserApi';
+import { useAuth } from './AuthContext';
 
 const StudyContext = createContext();
 export const StudyProvider = ({ children }) => {
     const [studyData, setStudyData] = useState(null);
     const [vocabularyData, setVocabularyData] = useState(null);
+    const {user} = useAuth();
     async function ChangeStudyData(data) {
         setStudyData(data);
         try {
@@ -38,6 +40,24 @@ export const StudyProvider = ({ children }) => {
         }
     }
 
+    async function createNewStudySets(newStudyData, newVocabularyData) {
+        try {
+            const total = newVocabularyData.length;
+            console.log(newStudyData);
+            const res = await axios.post(
+                `${URL}/StudySets/create`,
+                {newStudyData, total, user_id : user._id}
+            );
+
+            await axios.post(
+                `${URL}/vocabulary/create?flashCard_id=${res.data._id}`,
+                {newVocabularyData, total});
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async function updateMarkLearned(learned) {
         var MarkLearned = '';
         var countLearned = 0;
@@ -49,12 +69,13 @@ export const StudyProvider = ({ children }) => {
         vocabularyData.MarkLearned = MarkLearned;
         studyData.learned = countLearned;
         await updateVocabularyData(vocabularyData);
-        updatestudyData(studyData);
+        await updatestudyData(studyData);
     }
 
     const value = {
         ChangeStudyData,
         updateMarkLearned,
+        createNewStudySets,
         vocabularyData,
         studyData,
     };

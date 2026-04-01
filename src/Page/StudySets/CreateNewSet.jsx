@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useStudy } from '../../context/studyContext.jsx';
 
 export default function CreateNewSet() {
     const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function CreateNewSet() {
     const [isCreating, setIsCreating] = useState(false);
     const [createError, setCreateError] = useState('');
     const {user} = useAuth();
+    const {createNewStudySets} = useStudy();
 
     const categories = [
         'All',
@@ -32,24 +34,9 @@ export default function CreateNewSet() {
     });
 
     const [newCards, setNewCards] = useState([
-        { en: '', vi: '' },
-        { en: '', vi: '' },
+        { en: '', vn: '' },
+        { en: '', vn: '' },
     ]);
-
-    // const openCreateModal = () => {
-    //     setCreateError('');
-    //     setNewSetData({ title: '', description: '', category: 'Vocabulary' });
-    //     setNewCards([
-    //         { en: '', vi: '' },
-    //         { en: '', vi: '' },
-    //     ]);
-    //     setShowCreateModal(true);
-    // };
-
-    // const closeCreateModal = () => {
-    //     setShowCreateModal(false);
-    //     setCreateError('');
-    // };
 
     const handleCardChange = (index, field, value) => {
         setNewCards((prev) =>
@@ -60,7 +47,7 @@ export default function CreateNewSet() {
     };
 
     const addCard = () => {
-        setNewCards((prev) => [...prev, { en: '', vi: '' }]);
+        setNewCards((prev) => [...prev, { en: '', vn: '' }]);
     };
 
     const removeCard = (index) => {
@@ -74,7 +61,7 @@ export default function CreateNewSet() {
             return false;
         }
         const validCards = newCards.filter(
-            (c) => c.en.trim() && c.vi.trim(),
+            (c) => c.en.trim() && c.vn.trim(),
         );
         if (validCards.length === 0) {
             setCreateError('Add at least one term and definition to the set.');
@@ -88,70 +75,12 @@ export default function CreateNewSet() {
             setCreateError('You must be signed in to create a study set.');
             return;
         }
-
-        console.log(newCards, newSetData);
-        // setIsCreating(true);
-        // if (!validateNewSet()) return;
-
-        // setCreateError('');
-
-        // try {
-        //     const payload = {
-        //         user_id: user._id,
-        //         title: newSetData.title.trim(),
-        //         description: newSetData.description.trim(),
-        //         category: newSetData.category,
-        //         total: newCards.length,
-        //         learned: 0,
-        //         reviews: 0,
-        //     };
-
-        //     // const createSetResponse = await axios.post(
-        //     //     `${URL}/StudySets`,
-        //     //     payload,
-        //     // );
-        //     const createdSet = createSetResponse.data;
-
-        //     const cleanCards = newCards
-        //         .filter((c) => c.en.trim() && c.vi.trim())
-        //         .map((c) => ({
-        //             en: c.en.trim(),
-        //             vi: c.vi.trim(),
-        //         }));
-
-        //     if (createdSet && createdSet._id) {
-        //         // await axios.post(`${URL}/vocabulary`, {
-        //         //     flashCard_id: createdSet._id,
-        //         //     Vocabulary: cleanCards,
-        //         // });
-
-        //         setStudySets((prev) => [
-        //             {
-        //                 ...createdSet,
-        //                 ...payload,
-        //                 _id: createdSet._id,
-        //                 total: cleanCards.length,
-        //             },
-        //             ...prev,
-        //         ]);
-        //     } else {
-        //         setStudySets((prev) => [
-        //             {
-        //                 ...payload,
-        //                 _id: `local-${Date.now()}`,
-        //                 total: cleanCards.length,
-        //             },
-        //             ...prev,
-        //         ]);
-        //     }
-
-        //     closeCreateModal();
-        // } catch (error) {
-        //     console.error('Error creating new study set:', error);
-        //     setCreateError('Unable to create set. Please try again.');
-        // } finally {
-        //     setIsCreating(false);
-        // }
+        setIsCreating(true);
+        if (!validateNewSet()) return;
+        setCreateError('');
+        await createNewStudySets(newSetData, newCards);
+        setIsCreating(false);
+        navigate("/");
     };
 
     return (
@@ -299,11 +228,11 @@ export default function CreateNewSet() {
                                 />
                                 <Input
                                     label="DEFINITION"
-                                    value={card.vi}
+                                    value={card.vn}
                                     onChange={(e) =>
                                         handleCardChange(
                                             index,
-                                            'vi',
+                                            'vn',
                                             e.target.value,
                                         )
                                     }
