@@ -1,4 +1,5 @@
-import { useParams, useNavigate, useState, useEffect } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useStudy } from '../../context/studyContext.jsx';
 import axios from 'axios';
