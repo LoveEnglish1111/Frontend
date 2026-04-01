@@ -5,6 +5,7 @@ import { useStudy } from '../../context/studyContext.jsx';
 import axios from 'axios';
 import URL from '../../api/UserApi.jsx';
 import QuizMode from '../../components/QuizMode';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import Button from '../../components/Button';
 
 export default function QuizPage() {
@@ -31,7 +32,14 @@ export default function QuizPage() {
         { word: 'house', meaning: 'nhà cửa' },
     ];
 
-    const cards = vocabularyData?.Vocabulary || localCards;
+    const safeCards = vocabularyData?.Vocabulary || localCards || [];
+    console.log('[QUIZPAGE DEBUG] Render:', { 
+      setId, 
+      quizMode, 
+      cardsLength: safeCards.length, 
+      vocabularyData: !!vocabularyData?.Vocabulary?.length,
+      localCardsLength: localCards.length 
+    });
 
     useEffect(() => {
         const fetchCards = async () => {
@@ -72,8 +80,12 @@ export default function QuizPage() {
     };
 
     const selectMode = (mode) => {
-        if (mode === 'tracnghiem' && cards.length > 0) {
-            setShuffledCards(shuffleArray(cards));
+        if (safeCards.length === 0) {
+            console.warn('Cannot start quiz: no cards available');
+            return;
+        }
+        if (mode === 'tracnghiem') {
+            setShuffledCards(shuffleArray(safeCards));
         }
         setQuizMode(mode);
     };
@@ -111,7 +123,7 @@ export default function QuizPage() {
                         {studyData?.title && (
                             <p className="text-sm text-muted-foreground mt-1">{studyData.title}</p>
                         )}
-                        <p className="text-sm text-muted-foreground">{cards.length} cards</p>
+                        <p className="text-sm text-muted-foreground">{safeCards.length} cards</p>
                     </div>
                     {quizMode && (
                         <Button
@@ -134,7 +146,7 @@ export default function QuizPage() {
                                 Chọn Mode Quiz
                             </h2>
                             <p className="text-xl text-muted-foreground mb-12 opacity-90">
-                                {cards.length} từ vựng - Sẵn sàng học nào!
+                                {safeCards.length > 0 ? `${safeCards.length} từ vựng - Sẵn sàng học nào!` : 'Không có từ vựng để học'}
                             </p>
                             <div className="space-y-4">
                                 <Button
@@ -159,12 +171,14 @@ export default function QuizPage() {
                         </div>
                     </div>
                 ) : (
-                    <QuizMode 
-                        mode={quizMode} 
-                        cards={quizMode === 'tracnghiem' ? shuffledCards : cards} 
-                        studySetId={setId}
-                        onReset={resetMode}
-                    />
+                    <ErrorBoundary>
+                        <QuizMode 
+                            mode={quizMode} 
+                            cards={quizMode === 'tracnghiem' ? shuffledCards : safeCards} 
+                            studySetId={setId}
+                            onReset={resetMode}
+                        />
+                    </ErrorBoundary>
                 )}
             </div>
         </div>

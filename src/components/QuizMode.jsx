@@ -16,27 +16,36 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
     const [selectedOption, setSelectedOption] = useState(null); // tracnghiem
     const [tracnghiemAnswered, setTracnghiemAnswered] = useState(false); // tracnghiem
 
-    const currentCard = cards[currentCardIndex];
+    const currentCard = cards?.[currentCardIndex];
 
     // Generate 4 options for tracnghiem: correct word + 3 random others
     const generateTracnghiemOptions = () => {
-        if (!currentCard) return [];
+        if (!cards?.length || !currentCard?.word) {
+            return [];
+        }
         const correctWord = currentCard.word;
         const otherWords = cards
-            .filter((_, index) => index !== currentCardIndex)
+            .filter((_, index) => index !== currentCardIndex && cards[index]?.word)
+            .slice(0, 20) // safety limit
             .map(c => c.word);
         const shuffledOthers = otherWords.sort(() => Math.random() - 0.5).slice(0, 3);
         const options = [correctWord, ...shuffledOthers].sort(() => Math.random() - 0.5);
+        console.log('[QUIZMODE DEBUG] Options generated:', options);
         return options;
     };
 
     const options = generateTracnghiemOptions();
 
     const checkTuluanAnswer = () => {
-        if (!currentCard) return;
+        console.log('[QUIZMODE DEBUG] checkTuluanAnswer');
+        if (!currentCard?.word) {
+            console.error('[QUIZMODE DEBUG] No currentCard.word for tuluan check');
+            return;
+        }
         const normalizedUser = userAnswer.trim().toLowerCase();
         const normalizedCorrect = currentCard.word.trim().toLowerCase();
         const isCorrect = normalizedUser === normalizedCorrect;
+        console.log('[QUIZMODE DEBUG] Tuluan check:', { userAnswer: normalizedUser, correct: normalizedCorrect, isCorrect });
         if (isCorrect) {
             setScore(score + 1);
         }
@@ -44,6 +53,11 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
     };
 
     const handleTracnghiemSelect = (optionIndex) => {
+        console.log('[QUIZMODE DEBUG] handleTracnghiemSelect:', optionIndex);
+        if (!currentCard?.word) {
+            console.error('[QUIZMODE DEBUG] No currentCard.word for tracnghiem');
+            return;
+        }
         setSelectedOption(optionIndex);
         setTracnghiemAnswered(true);
         if (options[optionIndex] === currentCard.word) {
@@ -146,8 +160,9 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
         );
     }
 
-    if (cards.length === 0 || !currentCard) {
-        return <div className="text-center py-16"><p className="text-lg text-muted-foreground">Không có thẻ để chơi quiz</p></div>;
+    if (!cards?.length || currentCardIndex >= (cards.length ?? 0) || !currentCard) {
+        console.error('[QUIZMODE DEBUG] Early return - invalid state:', { cardsLength: cards?.length, currentIndex: currentCardIndex, hasCurrentCard: !!currentCard });
+        return <div className="text-center py-16"><p className="text-lg text-muted-foreground">Không có thẻ để chơi quiz hoặc lỗi trạng thái</p></div>;
     }
 
     const progress = ((currentCardIndex + 1) / cards.length) * 100;
