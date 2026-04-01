@@ -4,26 +4,8 @@ import Button from './Button';
 import ProgressBar from './ProgressBar';
 import { useStudy } from '../context/studyContext';
 import { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import URL from '../api/UserApi';
-
 export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
     const navigate = useNavigate();
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const res = await axios.get(
-    //                 `${URL}/vocabulary?flashCard_id=${set._id}`,
-    //             );
-    //             setCardsNumber(res.data[0].Vocabulary.length);
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, []);
-    
     const categoryColors = {
         Grammar: 'from-blue-50 to-blue-100',
         Vocabulary: 'from-purple-50 to-purple-100',

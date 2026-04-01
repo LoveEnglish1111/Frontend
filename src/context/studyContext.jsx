@@ -6,21 +6,41 @@ const StudyContext = createContext();
 export const StudyProvider = ({ children }) => {
     const [studyData, setStudyData] = useState(null);
     const [vocabularyData, setVocabularyData] = useState(null);
-
     async function ChangeStudyData(data) {
         setStudyData(data);
         try {
             const res = await axios.get(
-                `${URL}/vocabulary?flashCard_id=${data._id}`,
+                `${URL}/vocabulary/get?flashCard_id=${data._id}`,
             );
-            setVocabularyData(res.data[0].Vocabulary);
+            setVocabularyData(res.data);
         } catch (error) {
             console.log(error);
         }
     }
 
+    async function updateMarkLearned(learned) {
+        var MarkLearned = "";
+        var cnt = 0;
+        for (let i = 0; i < studyData.total; i++) {
+            const isLearnHas = learned.has(i);
+            MarkLearned += isLearnHas ? "1" : "0";
+            cnt += isLearnHas ? 1 : 0;
+        }
+        
+        // try {
+        //     const res = await axios.post(
+        //         `${URL}/vocabulary/update?flashCard_id=${data._id}`,
+        //         vocabularyData
+        //     );
+        // } catch (error) {
+        //     console.log(error);
+        // }
+        
+    }
+
     const value = {
         ChangeStudyData,
+        updateMarkLearned,
         vocabularyData,
         studyData,
     };
