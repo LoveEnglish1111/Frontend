@@ -4,21 +4,15 @@ import Button from '../../components/Button.jsx';
 import StudySetCard from '../../components/StudySetCard.jsx';
 import Input from '../../components/Input.jsx';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
-import { useAuth } from '../../context/AuthContext.jsx';
 import { useStudy } from '../../context/studyContext.jsx';
-import URL from '../../api/UserApi.jsx';
 
 export default function StudySets() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const { user } = useAuth();
-    const { ChangeStudyData } = useStudy();
+    const { ChangeStudyData, studySets } = useStudy();
 
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');
-    const [studySets, setStudySets] = useState([]);
-
 
     // categories used in UI
     const categories = [
@@ -37,29 +31,7 @@ export default function StudySets() {
             setSelectedCategory('Daily');
         }
     }, [searchParams]);
-
-    const fetchStudySets = async () => {
-        if (!user || !user._id) {
-            return;
-        }
-
-        try {
-            const res = await axios.get(`${URL}/StudySets/get?user_id=${user._id}`);
-            if (res.data && Array.isArray(res.data)) {
-                setStudySets(res.data);
-            }
-        } catch (error) {
-            console.error('Error fetching study sets:', error);
-            setStudySets([]);
-        }
-    };
-
-    // Fetch study sets from API when user is available
-    useEffect(() => {
-        if (user && user._id) {
-            fetchStudySets();
-        }
-    }, [user]);
+    
 
     // Filter study sets
     const filteredSets = studySets.filter((set) => {

@@ -1,12 +1,10 @@
-import { BookOpen, Play, Zap } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Play, Zap, Trash, Pen } from 'lucide-react';
 import Button from './Button';
 import ProgressBar from './ProgressBar';
 import { useStudy } from '../context/studyContext';
-import { useEffect, useState } from 'react';
 
 export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
-    const navigate = useNavigate();
+    const {deleteStudyData} = useStudy();
     const categoryColors = {
         Grammar: 'from-blue-50 to-blue-100',
         Vocabulary: 'from-purple-50 to-purple-100',
@@ -25,6 +23,11 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
         Daily: '💬',
     };
 
+    async function handleDeleteFlashCard() {
+        const flashcard_id = set._id;
+        await deleteStudyData(flashcard_id);
+    }
+
     const bgGradient =
         categoryColors[set.category] || 'from-slate-50 to-slate-100';
     const icon = categoryIcons[set.category] || '📝';
@@ -39,7 +42,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                         {set.category}
                     </span>
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">
+                <h3 className="text-xl font-bold text-foreground mb-2 truncate w-full">
                     {set.title}
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -119,6 +122,18 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                         </p>
                     </div>
                 )}
+
+                {/* Footer */}
+                <div className='flex justify-between'>
+                    <Button className='cursor-pointer' variant='ghost' onClick={handleDeleteFlashCard}>
+                        <Trash/>
+                    </Button>
+
+                    <Button className='cursor-pointer' variant='ghost'>
+                        <Pen/>
+                    </Button>
+                    {/* Hello world */}
+                </div>
             </div>
         </div>
     );

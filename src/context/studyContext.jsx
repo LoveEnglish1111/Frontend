@@ -7,7 +7,31 @@ const StudyContext = createContext();
 export const StudyProvider = ({ children }) => {
     const [studyData, setStudyData] = useState(null);
     const [vocabularyData, setVocabularyData] = useState(null);
+    const [studySets, setStudySets] = useState(null);
     const {user} = useAuth();
+
+    const fetchStudySets = async () => {
+        if (!user || !user._id) {
+            return;
+        }
+
+        try {
+            const res = await axios.get(`${URL}/StudySets/get?user_id=${user._id}`);
+            if (res.data && Array.isArray(res.data)) {
+                setStudySets(res.data);
+            }
+        } catch (error) {
+            console.error('Error fetching study sets:', error);
+            setStudySets([]);
+        }
+    };
+
+    useEffect(() => {
+        if (user && user._id) {
+            fetchStudySets();
+        }
+    }, [user]);
+
     async function ChangeStudyData(data) {
         setStudyData(data);
         try {
@@ -38,6 +62,24 @@ export const StudyProvider = ({ children }) => {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    async function deleteStudyData(flashCard_id) {
+        try {
+            const res = await axios.post(
+                `${URL}/StudySets/delete?flashCard_id=${flashCard_id}`);
+        } catch (error) {
+            console.log(error);
+        }
+
+        try {
+            const res = await axios.post(
+                `${URL}/vocabulary/delete?flashCard_id=${flashCard_id}`);
+        } catch (error) {
+            console.log(error);
+        }
+
+        await fetchStudySets();
     }
 
     async function createNewStudySets(newStudyData, newVocabularyData) {
@@ -73,9 +115,11 @@ export const StudyProvider = ({ children }) => {
     }
 
     const value = {
+        studySets,
         ChangeStudyData,
         updateMarkLearned,
         createNewStudySets,
+        deleteStudyData,
         vocabularyData,
         studyData,
     };
