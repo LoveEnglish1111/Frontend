@@ -24,25 +24,12 @@ export default function SignIn() {
     useEffect(() => {
         clearError();
     }, [clearError]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
-
-nhanh-moi-cua-toi
-        try {
-            const res = await axios.get(
-                `${URL}/auth/login?email=${email}&password=${password}`,
-            );
-            signin(res.data);
-            if (res.data?.token) {
-                localStorage.setItem('authToken', res.data.token);
-            }
-            localStorage.setItem('user', JSON.stringify(res.data));
-
-
         const result = await signin(email, password);
         if (result.success == true) {
- main
             if (rememberMe) {
                 localStorage.setItem('savedEmail', email);
             } else {
@@ -54,7 +41,7 @@ nhanh-moi-cua-toi
         } else {
             setErrors(result.newErrors);
         }
-    };
+    }
 
     return (
         <div className="min-h-screen w-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center p-4">

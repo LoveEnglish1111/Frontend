@@ -69,19 +69,19 @@ export const AuthProvider = ({ children }) => {
     };
 
     // Sign in
-nhanh-moi-cua-toi
-    const signin = async (user) => {
-        setAuthError(null);
-        setUser(user);
-        setUserId(user._id);
-        setIsAuthenticated(true);
+    // const signin = async (user) => {
+    //     setAuthError(null);
+    //     setUser(user);
+    //     setUserId(user._id);
+    //     setIsAuthenticated(true);
 
-        // Persist session to localStorage so refresh doesn't break auth
-        if (user?.token) {
-            localStorage.setItem('authToken', user.token);
-        }
-        localStorage.setItem('user', JSON.stringify(user));
-        setIsLoading(false);
+    //     // Persist session to localStorage so refresh doesn't break auth
+    //     if (user?.token) {
+    //         localStorage.setItem('authToken', user.token);
+    //     }
+    //     localStorage.setItem('user', JSON.stringify(user));
+    //     setIsLoading(false);
+    // }
 
     const signin = async (email, password) => {
 		const result = {
@@ -114,20 +114,15 @@ nhanh-moi-cua-toi
         } finally {
 			setIsLoading(false);
 		}
-
- main
     };
 
     // Sign out
     const signout = async () => {
         setIsLoading(true);
         try {
- nhanh-moi-cua-toi
             // Cleanup localStorage session data
             localStorage.removeItem('authToken');
             localStorage.removeItem('user');
-
- main
             setUser(null);
             setUserId(null);
             setIsAuthenticated(false);
