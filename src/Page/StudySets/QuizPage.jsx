@@ -2,8 +2,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useStudy } from '../../context/studyContext.jsx';
-import axios from 'axios';
-import URL from '../../api/UserApi.jsx';
 import QuizMode from '../../components/QuizMode';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Button from '../../components/Button';
@@ -17,20 +15,6 @@ export default function QuizPage() {
     const [localCards, setLocalCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // Mock data if backend empty
-    const mockCards = [
-        { word: 'hello', meaning: 'xin chào' },
-        { word: 'book', meaning: 'sách' },
-        { word: 'apple', meaning: 'quả táo' },
-        { word: 'computer', meaning: 'máy tính' },
-        { word: 'teacher', meaning: 'giáo viên' },
-        { word: 'student', meaning: 'học sinh' },
-        { word: 'school', meaning: 'trường học' },
-        { word: 'friend', meaning: 'bạn bè' },
-        { word: 'family', meaning: 'gia đình' },
-        { word: 'house', meaning: 'nhà cửa' },
-    ];
 
     const safeCards = vocabularyData?.Vocabulary || localCards || [];
     console.log('[QUIZPAGE DEBUG] Render:', { 
@@ -49,22 +33,8 @@ export default function QuizPage() {
             }
             setLoading(true);
             setError(null);
-            try {
-                // const res = await axios.get(`${URL}/vocabulary/get?flashCard_id=${setId}`);
-                // const apiCards = res.data?.Vocabulary || res.data || [];
-                // setLocalCards(apiCards);
-                // if (apiCards.length === 0) {
-                //     console.log('Backend empty, using mock data');
-                //     setLocalCards(mockCards);
-                // }
-            } catch (err) {
-                // console.error('Fetch error:', err);
-                // console.log('Using mock data');
-                // setLocalCards(mockCards);
-                // setError(null);
-            } finally {
-                setLoading(false);
-            }
+
+            setLoading(false);
         };
 
         fetchCards();
@@ -113,13 +83,13 @@ export default function QuizPage() {
                 <div className="max-w-6xl mx-auto flex items-center justify-between">
                     <button
                         onClick={() => navigate('/StudySets')}
-                        className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold p-2 rounded-lg hover:bg-primary/5"
+                        className="cursor-pointer flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold p-2 rounded-lg hover:bg-primary/5"
                     >
                         <ArrowLeft size={20} />
                         Back
                     </button>
                     <div className="text-center">
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                        <h1 className="text-3xl font-bold text-primary select-none">
                             Quiz Time!
                         </h1>
                         {studyData?.title && (
@@ -131,7 +101,7 @@ export default function QuizPage() {
                         <Button
                             variant="outline"
                             onClick={resetMode}
-                            className="gap-2"
+                            className="gap-2 cursor-pointer"
                         >
                             Change Mode
                         </Button>

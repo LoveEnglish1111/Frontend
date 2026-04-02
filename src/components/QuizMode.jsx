@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Volume2, Edit3, CheckCircle, XCircle } from 'lucide-react';
 import Button from './Button';
 import Input from './Input';
 import ProgressBar from './ProgressBar';
+import { useNavigate } from 'react-router-dom';
 
 export default function QuizMode({ mode, cards, studySetId, onReset, onComplete }) {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
+    const navigate = useNavigate();
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
-
     // Mode-specific state
     const [userAnswer, setUserAnswer] = useState(''); // tuluan
     const [showTuluanAnswer, setShowTuluanAnswer] = useState(false); // tuluan
@@ -16,6 +17,20 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
     const [selectedOption, setSelectedOption] = useState(null); // tracnghiem
     const [tracnghiemAnswered, setTracnghiemAnswered] = useState(false); // tracnghiem
     const currentCard = cards?.[currentCardIndex];
+
+    const generateTracnghiemOptions = () => {
+        if (!cards?.length || !currentCard?.en) {
+            return [];
+        }
+        const correctWord = currentCard.en;
+        const otherWords = cards
+            .filter((_, index) => index !== currentCardIndex && cards[index]?.en)
+            .slice(0, 4) // safety limit
+            .map(c => c.en);
+        const options = [correctWord, ...otherWords].sort(() => Math.random() - 0.5);
+        return options;
+    };
+    const [options, setOptions] = useState(generateTracnghiemOptions);
 
     const checkTuluanAnswer = () => {
         console.log('[QUIZMODE DEBUG] checkTuluanAnswer');
@@ -34,13 +49,12 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
     };
 
     const handleTracnghiemSelect = (optionIndex) => {
-        console.log(optionIndex);
         if (!currentCard?.en) {
             console.error('[QUIZMODE DEBUG] No currentCard.word for tracnghiem');
             return;
         }
         setSelectedOption(optionIndex);
-        // setTracnghiemAnswered(true);
+        setTracnghiemAnswered(true);
         if (options[optionIndex] === currentCard.en) {
             setScore(score + 1);
         }
@@ -50,24 +64,18 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
         if (currentCardIndex < cards.length - 1) {
             setCurrentCardIndex(currentCardIndex + 1);
             // Reset states
-            setUserAnswer('');
-            setShowTuluanAnswer(false);
-            setTuluanAnswered(false);
-            setSelectedOption(null);
-            setTracnghiemAnswered(false);
+            if (mode == "tracnghiem") {
+                setOptions(generateTracnghiemOptions);
+                setSelectedOption(null);
+                setTracnghiemAnswered(false);
+            }
+            else {
+                setUserAnswer('');
+                setShowTuluanAnswer(false);
+                setTuluanAnswered(false);
+            }
         } else {
             setShowResults(true);
-        }
-    };
-
-    const handlePrevious = () => {
-        if (currentCardIndex > 0) {
-            setCurrentCardIndex(currentCardIndex - 1);
-            setUserAnswer('');
-            setShowTuluanAnswer(false);
-            setTuluanAnswered(false);
-            setSelectedOption(null);
-            setTracnghiemAnswered(false);
         }
     };
 
@@ -83,7 +91,7 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
     };
 
     const handleCompleteQuiz = () => {
-        onComplete?.({ score, total: cards.length });
+        navigate("/");
     };
 
     // Results modal (shared)
@@ -124,14 +132,14 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
                         </p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-3 mt-8">
-                        <Button variant="outline" fullWidth className="sm:w-auto" onClick={handleRestart}>
+                        <Button variant="outline" fullWidth className="sm:w-auto cursor-pointer" onClick={handleRestart}>
                             Chơi lại
                         </Button>
-                        <Button variant="primary" fullWidth className="sm:w-auto" onClick={handleCompleteQuiz}>
+                        <Button variant="primary" fullWidth className="sm:w-auto cursor-pointer" onClick={handleCompleteQuiz}>
                             Xong
                         </Button>
                         {onReset && (
-                            <Button variant="ghost" className="sm:w-auto" onClick={onReset}>
+                            <Button variant="ghost" className="sm:w-auto cursor-pointer" onClick={onReset}>
                                 Đổi chế độ
                             </Button>
                         )}
@@ -145,27 +153,9 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
         console.error('[QUIZMODE DEBUG] Early return - invalid state:', { cardsLength: cards?.length, currentIndex: currentCardIndex, hasCurrentCard: !!currentCard });
         return <div className="text-center py-16"><p className="text-lg text-muted-foreground">Không có thẻ để chơi quiz hoặc lỗi trạng thái</p></div>;
     }
-
-    // Generate 4 options for tracnghiem: correct word + 3 random others
-    const generateTracnghiemOptions = () => {
-        if (!cards?.length || !currentCard?.en) {
-            return [];
-        }
-        const correctWord = currentCard.en;
-        const otherWords = cards
-            .filter((_, index) => index !== currentCardIndex && cards[index]?.en)
-            .slice(0, 20) // safety limit
-            .map(c => c.en);
-        const options = [correctWord, ...otherWords].sort(() => Math.random() - 0.5);
-        return options;
-    };
-
-    const options = generateTracnghiemOptions();
-    const progress = ((currentCardIndex + 1) / cards.length) * 100;
+    // const progress = ((currentCardIndex + 1) / cards.length) * 100;
     const answered = mode === 'tuluan' ? tuluanAnswered : tracnghiemAnswered;
     const correctIndex = options.findIndex(opt => opt === currentCard.en);
-
-    console.log(selectedOption, correctIndex);
     const isCorrect = mode === 'tuluan' ? (userAnswer.trim().toLowerCase() === currentCard.en.trim().toLowerCase()) : (selectedOption === correctIndex);
 
     return (
@@ -275,9 +265,6 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
                                     <span className={`font-bold text-lg ${isCorrect ? 'text-success' : 'text-danger'}`}>
                                         {isCorrect ? '✅ Đúng!' : '❌ Sai!'}
                                     </span>
-                                    <Button variant="primary" onClick={handleNext} className="px-6">
-                                        {currentCardIndex === cards.length - 1 ? 'Xem kết quả' : 'Tiếp'}
-                                    </Button>
                                 </div>
                                 {!isCorrect && (
                                     <p className="text-sm mt-2 text-danger font-medium">Đáp án đúng: <strong>{currentCard.en}</strong></p>
@@ -290,34 +277,17 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
                 {/* Navigation */}
                 {!showResults && answered && (
                     <div className="flex justify-between mt-8 pt-6 border-t border-border">
-                        <Button
-                            variant="outline"
-                            onClick={handlePrevious}
-                            disabled={currentCardIndex === 0}
-                            className="flex items-center gap-2"
-                        >
-                            <ChevronLeft size={16} />
-                            Trước
-                        </Button>
+                        <p></p>
                         <Button
                             variant="primary"
                             onClick={handleNext}
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-2 cursor-pointer"
                             disabled={false}
                         >
                             {currentCardIndex === cards.length - 1 ? 'Kết quả' : 'Tiếp theo'}
                             {currentCardIndex < cards.length - 1 && <ChevronRight size={16} />}
                         </Button>
                     </div>
-                )}
-            </div>
-
-            {/* Extra actions */}
-            <div className="flex gap-3 mt-6">
-                {onReset && (
-                    <Button variant="outline" onClick={onReset} className="flex-1">
-                        Đổi chế độ
-                    </Button>
                 )}
             </div>
         </div>
