@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function QuizMode({ mode, cards, studySetId, onReset, onComplete }) {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
-    const navigate = useNavigate();
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
     // Mode-specific state
@@ -33,15 +32,12 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
     const [options, setOptions] = useState(generateTracnghiemOptions);
 
     const checkTuluanAnswer = () => {
-        console.log('[QUIZMODE DEBUG] checkTuluanAnswer');
-        if (!currentCard?.word) {
-            console.error('[QUIZMODE DEBUG] No currentCard.word for tuluan check');
+        if (!currentCard?.en) {
             return;
         }
         const normalizedUser = userAnswer.trim().toLowerCase();
-        const normalizedCorrect = currentCard.word.trim().toLowerCase();
+        const normalizedCorrect = currentCard.en.trim().toLowerCase();
         const isCorrect = normalizedUser === normalizedCorrect;
-        console.log('[QUIZMODE DEBUG] Tuluan check:', { userAnswer: normalizedUser, correct: normalizedCorrect, isCorrect });
         if (isCorrect) {
             setScore(score + 1);
         }
@@ -90,10 +86,6 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
         setTracnghiemAnswered(false);
     };
 
-    const handleCompleteQuiz = () => {
-        navigate("/");
-    };
-
     // Results modal (shared)
     if (showResults) {
         const percentage = cards.length > 0 ? Math.round((score / cards.length) * 100) : 0;
@@ -105,44 +97,39 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
                         <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center mx-auto mb-4">
                             <span className="text-5xl font-bold text-primary-600">{grade}</span>
                         </div>
-                        <h2 className="text-2xl font-bold text-foreground mb-2">Quiz Hoàn Thành!</h2>
-                        <p className="text-muted-foreground">Bạn đạt {score}/{cards.length} câu đúng</p>
+                        <h2 className="text-2xl font-bold text-foreground mb-2">QUIZ COMPLETED!</h2>
+                        <p className="text-muted-foreground">You got {score}/{cards.length} the best answered</p>
                     </div>
                     <ProgressBar current={score} total={cards.length} color={percentage >= 80 ? 'success' : 'warning'} />
                     <p className="text-right text-sm font-semibold mt-2">{percentage}%</p>
                     <div className="grid grid-cols-3 gap-4 mt-6 py-4 border-y">
                         <div className="text-center">
                             <p className="text-xl font-bold text-success">{score}</p>
-                            <p className="text-xs text-muted-foreground">Đúng</p>
+                            <p className="text-xs text-muted-foreground">Correct</p>
                         </div>
                         <div className="text-center">
                             <p className="text-xl font-bold text-danger">{cards.length - score}</p>
-                            <p className="text-xs text-muted-foreground">Sai</p>
+                            <p className="text-xs text-muted-foreground">Incorrect</p>
                         </div>
                         <div className="text-center">
                             <p className="text-xl font-bold text-primary-600">{percentage}%</p>
-                            <p className="text-xs text-muted-foreground">Điểm</p>
+                            <p className="text-xs text-muted-foreground">Score</p>
                         </div>
                     </div>
                     <div className={`p-4 rounded-lg mt-6 ${percentage >= 80 ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'}`}>
                         <p className="font-semibold">
-                            {percentage >= 90 ? '🎉 Xuất sắc! Bạn đã nắm vững bộ từ này!' :
-                             percentage >= 80 ? '👍 Tốt lắm! Tiếp tục luyện tập!' :
-                             percentage >= 70 ? '📚 Khá tốt! Ôn lại và thử lại.' : '💪 Cố lên! Thực hành nhiều hơn.'}
+                            {percentage >= 90 ? '🎉 excellently ! You have mastered this vocabulary set!' :
+                             percentage >= 80 ? '👍 Good! Keep practicing!' :
+                             percentage >= 70 ? '📚 Pretty good! Let review and try again.' : '💪 Try your best! Practice more.'}
                         </p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-3 mt-8">
                         <Button variant="outline" fullWidth className="sm:w-auto cursor-pointer" onClick={handleRestart}>
-                            Chơi lại
+                            Play Again
                         </Button>
-                        <Button variant="primary" fullWidth className="sm:w-auto cursor-pointer" onClick={handleCompleteQuiz}>
-                            Xong
+                        <Button variant="primary" fullWidth className="sm:w-auto cursor-pointer" onClick={onReset}>
+                            Back
                         </Button>
-                        {onReset && (
-                            <Button variant="ghost" className="sm:w-auto cursor-pointer" onClick={onReset}>
-                                Đổi chế độ
-                            </Button>
-                        )}
                     </div>
                 </div>
             </div>
@@ -163,7 +150,7 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
             {/* Header */}
             <div className="mb-6">
                 <div className="flex justify-between items-center mb-3">
-                    <h2 className="text-2xl font-bold text-foreground capitalize">{mode === 'tuluan' ? 'Chế Độ Tự Luận' : 'Chế Độ Trắc Nghiệm'}</h2>
+                    <h2 className="text-2xl font-bold text-foreground capitalize">{mode === 'tuluan' ? 'Eassy Mode' : 'Multiple Choice Mode'}</h2>
                     <span className="text-sm font-semibold text-primary-600">{currentCardIndex + 1}/{cards.length}</span>
                 </div>
                 <ProgressBar current={currentCardIndex + 1} total={cards.length} color="primary" />
@@ -172,9 +159,9 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
             {/* Question Card */}
             <div className="bg-white rounded-2xl border-2 border-border p-8 mb-8 shadow-sm">
                 <div className="text-center mb-12">
-                    <p className="text-sm text-muted-foreground">Câu {currentCardIndex + 1}</p>
+                    <p className="text-sm text-muted-foreground">Question: {currentCardIndex + 1}</p>
                     <h3 className="text-3xl md:text-4xl font-bold text-primary-600 mb-4 tracking-wide">
-                        {currentCard.vn}
+                        {currentCard.vn.toUpperCase()}
                     </h3>
                 </div>
 
@@ -191,21 +178,20 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
                             autoFocus
                         />
                         {tuluanAnswered && (
-                            <div className={`p-6 rounded-2xl transition-all ${isCorrect ? 'bg-success/10 border-success' : 'bg-danger/10 border-danger border-2'}`}>
+                            <div className={`p-6 rounded-2xl transition-all ${isCorrect ? 'border-success border-2' : 'border-[#ef4444] border-2'}`}>
                                 {showTuluanAnswer ? (
                                     <div className="text-center">
-                                        <div className="text-2xl font-bold mb-2">{currentCard.word}</div>
-                                        <p className="text-sm text-muted-foreground">Đáp án đúng</p>
+                                        <div className="text-2xl font-bold mb-2">{currentCard.en}</div>
+                                        <p className="text-sm text-muted-foreground">ANSWERED</p>
                                     </div>
                                 ) : (
                                     <>
                                         <div className="flex items-center justify-center gap-2 mb-4">
-                                            {isCorrect ? <CheckCircle className="text-success text-2xl" /> : <XCircle className="text-danger text-2xl" />}
-                                            <span className={`text-xl font-bold ${isCorrect ? 'text-success' : 'text-danger'}`}>
+                                            <span className={`text-xl font-bold ${isCorrect ? 'text-success' : 'text-[#ef4444]'}`}>
                                                 {isCorrect ? '✅ Đúng!' : '❌ Sai!'}
                                             </span>
                                         </div>
-                                        <p className={`font-semibold ${isCorrect ? 'text-success' : 'text-danger'}`}>
+                                        <p className={`font-semibold ${isCorrect ? 'text-success' : 'text-[#ef4444]'}`}>
                                             {isCorrect ? 'Tuyệt vời! Sang từ tiếp theo.' : 'Nhấn "Hiện đáp án" để xem.'}
                                         </p>
                                     </>
@@ -213,23 +199,23 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
                             </div>
                         )}
                         {tuluanAnswered && (
-                            <div className="flex gap-3 pt-4 border-t">
+                            <div className="flex gap-3 pt-4">
                                 <Button 
                                     variant="outline" 
                                     onClick={() => setShowTuluanAnswer(!showTuluanAnswer)}
-                                    className="flex-1"
+                                    className="flex-1 cursor-pointer"
                                 >
                                     {showTuluanAnswer ? 'Từ tiếp theo' : 'Hiện đáp án'}
                                 </Button>
-                                <Button variant="primary" onClick={handleNext} className="flex-1">
-                                    Tiếp
+                                <Button variant="primary" onClick={handleNext} className="flex-1 cursor-pointer">
+                                    Next
                                 </Button>
                             </div>
                         )}
                         {!tuluanAnswered && (
-                            <Button variant="primary" onClick={checkTuluanAnswer} className="w-full">
+                            <Button variant="primary" onClick={checkTuluanAnswer} className="w-full cursor-pointer">
                                 <Edit3 size={20} className="mr-2" />
-                                Kiểm tra
+                                Check
                             </Button>
                         )}
                     </div>
@@ -255,19 +241,19 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
                                     className={style}
                                 >
                                     <span className="w-8 font-bold text-lg mr-4">{String.fromCharCode(65 + index)}.</span>
-                                    <span>{option}</span>
+                                    <span>{option.toUpperCase()}</span>
                                 </button>
                             );
                         })}
                         {tracnghiemAnswered && (
-                            <div className={`p-5 rounded-xl mt-4 ${isCorrect ? 'bg-success/10 border-success border' : 'bg-danger/10 border-danger border'}`}>
+                            <div className={`p-5 rounded-xl mt-4 ${isCorrect ? 'border-success border' : 'border-[#ef4444] border'}`}>
                                 <div className="flex items-center justify-between">
-                                    <span className={`font-bold text-lg ${isCorrect ? 'text-success' : 'text-danger'}`}>
-                                        {isCorrect ? '✅ Đúng!' : '❌ Sai!'}
+                                    <span className={`font-bold text-lg ${isCorrect ? 'text-success' : 'text-[#ef4444]'}`}>
+                                        {isCorrect ? '✅ Correct!' : '❌ Incorrect!'}
                                     </span>
                                 </div>
                                 {!isCorrect && (
-                                    <p className="text-sm mt-2 text-danger font-medium">Đáp án đúng: <strong>{currentCard.en}</strong></p>
+                                    <p className="text-[16px] mt-2 text-[#ef4444] font-medium">Answered: <strong>{currentCard.en.toUpperCase()}</strong></p>
                                 )}
                             </div>
                         )}
@@ -275,7 +261,7 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
                 )}
 
                 {/* Navigation */}
-                {!showResults && answered && (
+                {!showResults && mode == "tracnghiem" && answered && (
                     <div className="flex justify-between mt-8 pt-6 border-t border-border">
                         <p></p>
                         <Button
@@ -284,7 +270,7 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
                             className="flex items-center gap-2 cursor-pointer"
                             disabled={false}
                         >
-                            {currentCardIndex === cards.length - 1 ? 'Kết quả' : 'Tiếp theo'}
+                            {currentCardIndex === cards.length - 1 ? 'Result' : 'Next'}
                             {currentCardIndex < cards.length - 1 && <ChevronRight size={16} />}
                         </Button>
                     </div>

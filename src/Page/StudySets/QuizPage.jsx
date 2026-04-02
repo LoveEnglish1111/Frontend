@@ -57,14 +57,17 @@ export default function QuizPage() {
         if (mode === 'tracnghiem') {
             setShuffledCards(shuffleArray(safeCards));
         }
-
-        console.log(safeCards);
         setQuizMode(mode);
     };
 
     const resetMode = () => {
         setQuizMode(null);
     };
+
+    const handleClickBack = () => {
+        if (quizMode == null) navigate("/StudySets")
+        else resetMode();
+    }
 
     if (loading) {
         return (
@@ -82,8 +85,8 @@ export default function QuizPage() {
             <div className="bg-white border-b border-border p-4">
                 <div className="max-w-6xl mx-auto flex items-center justify-between">
                     <button
-                        onClick={() => navigate('/StudySets')}
-                        className="cursor-pointer flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold p-2 rounded-lg hover:bg-primary/5"
+                        onClick={handleClickBack}
+                        className="cursor-pointer flex items-center gap-2 text-primary-600 font-semibold p-2 rounded-lg text-[20px]"
                     >
                         <ArrowLeft size={20} />
                         Back
@@ -97,15 +100,6 @@ export default function QuizPage() {
                         )}
                         <p className="text-sm text-muted-foreground">{safeCards.length} cards</p>
                     </div>
-                    {quizMode && (
-                        <Button
-                            variant="outline"
-                            onClick={resetMode}
-                            className="gap-2 cursor-pointer"
-                        >
-                            Change Mode
-                        </Button>
-                    )}
                 </div>
             </div>
 
@@ -115,29 +109,30 @@ export default function QuizPage() {
                         <div className="bg-gradient-to-b from-indigo-50 to-purple-50 rounded-3xl p-12 border border-indigo-200 shadow-2xl text-center">
                             <div className="text-6xl mb-8 mx-auto">⚡</div>
                             <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6">
-                                Chọn Mode Quiz
+                                Mode Quiz
                             </h2>
                             <p className="text-xl text-muted-foreground mb-12 opacity-90">
-                                {safeCards.length > 0 ? `${safeCards.length} từ vựng - Sẵn sàng học nào!` : 'Không có từ vựng để học'}
+                                {safeCards.length > 0 ? `${safeCards.length} vocabulary - Ready to learn!` : 'No vocabulary to learn.'}
                             </p>
                             <div className="space-y-4">
                                 <Button
-                                    variant="primary"
-                                    size="lg"
-                                    className="w-full h-20 text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all group"
-                                    onClick={() => selectMode('tuluan')}
-                                >
-                                    <span className="text-2xl mr-3">✍️</span>
-                                    Tự Luận
-                                </Button>
-                                <Button
                                     variant="secondary"
                                     size="lg"
-                                    className="w-full h-20 text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all group bg-gradient-to-r from-purple-500 to-pink-500"
+                                    className="cursor-pointer text-white w-full h-20 text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all group bg-gradient-to-r from-purple-500 to-pink-500"
                                     onClick={() => selectMode('tracnghiem')}
                                 >
                                     <span className="text-2xl mr-3">📝</span>
-                                    Trắc Nghiệm
+                                    Multiple Choice
+                                </Button>
+
+                                <Button
+                                    variant="primary"
+                                    size="lg"
+                                    className="cursor-pointer w-full h-20 text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all group"
+                                    onClick={() => selectMode('tuluan')}
+                                >
+                                    <span className="text-2xl mr-3">✍️</span>
+                                    Essay
                                 </Button>
                             </div>
                         </div>
