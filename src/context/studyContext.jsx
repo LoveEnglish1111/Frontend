@@ -8,13 +8,25 @@ export const StudyProvider = ({ children }) => {
     const [studyData, setStudyData] = useState(null);
     const [vocabularyData, setVocabularyData] = useState(null);
     const [studySets, setStudySets] = useState(null);
+    const [updateFlashCardData, setUpdateFlashCardData] = useState(null);
     const {user} = useAuth();
 
     const fetchStudySets = async () => {
         if (!user || !user._id) {
             return;
         }
+        getStudyData();
+        
+    };
 
+    useEffect(() => {
+        if (user && user._id) {
+            fetchStudySets();
+        }
+    }, [user]);
+
+    // Study Data
+    async function getStudyData() {
         try {
             const res = await axios.get(`${URL}/StudySets/get?user_id=${user._id}`);
             if (res.data && Array.isArray(res.data)) {
@@ -24,21 +36,29 @@ export const StudyProvider = ({ children }) => {
             console.error('Error fetching study sets:', error);
             setStudySets([]);
         }
-    };
+    }
 
-    useEffect(() => {
-        if (user && user._id) {
-            fetchStudySets();
+    async function updatestudyData(newStudyData) {
+        try {
+            const res = await axios.post(
+                `${URL}/StudySets/update`,
+                newStudyData
+            );
+        } catch (error) {
+            console.log(error);
         }
-    }, [user]);
+    }
 
-    async function ChangeStudyData(data) {
+    // Vocabulary
+
+    async function getVocabularyData(data) {
         setStudyData(data);
         try {
             const res = await axios.get(
                 `${URL}/vocabulary/get?flashCard_id=${data._id}`,
             );
             setVocabularyData(res.data);
+            return res.data;
         } catch (error) {
             console.log(error);
         }
@@ -53,15 +73,24 @@ export const StudyProvider = ({ children }) => {
         }
     }
 
-    async function updatestudyData(newStudyData) {
+    // Study Data And Vocabulary
+    async function createNewStudySets(newStudyData, newVocabularyData) {
         try {
+            const total = newVocabularyData.length;
+            console.log(newStudyData);
             const res = await axios.post(
-                `${URL}/StudySets/update`,
-                newStudyData
+                `${URL}/StudySets/create`,
+                {newStudyData, total, user_id : user._id}
             );
+
+            await axios.post(
+                `${URL}/vocabulary/create?flashCard_id=${res.data._id}`,
+                {newVocabularyData, total});
+
         } catch (error) {
             console.log(error);
         }
+        await fetchStudySets();
     }
 
     async function deleteStudyData(flashCard_id) {
@@ -82,24 +111,7 @@ export const StudyProvider = ({ children }) => {
         await fetchStudySets();
     }
 
-    async function createNewStudySets(newStudyData, newVocabularyData) {
-        try {
-            const total = newVocabularyData.length;
-            console.log(newStudyData);
-            const res = await axios.post(
-                `${URL}/StudySets/create`,
-                {newStudyData, total, user_id : user._id}
-            );
-
-            await axios.post(
-                `${URL}/vocabulary/create?flashCard_id=${res.data._id}`,
-                {newVocabularyData, total});
-
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
+    // Handle
     async function updateMarkLearned(learned) {
         var MarkLearned = '';
         var countLearned = 0;
@@ -114,14 +126,27 @@ export const StudyProvider = ({ children }) => {
         await updatestudyData(studyData);
     }
 
+    async function getUpdateFlashCardData(set) {
+        const vocabularyData = await getVocabularyData(set);
+        setUpdateFlashCardData({
+            newSetData : set,
+            newCards : vocabularyData
+        });
+    }
+
     const value = {
         studySets,
-        ChangeStudyData,
+        getVocabularyData,
         updateMarkLearned,
         createNewStudySets,
         deleteStudyData,
+        getUpdateFlashCardData,
+        updatestudyData,
+        updateVocabularyData,
         vocabularyData,
+        getStudyData,
         studyData,
+        updateFlashCardData
     };
 
     return (

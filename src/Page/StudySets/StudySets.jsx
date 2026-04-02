@@ -9,7 +9,7 @@ import { useStudy } from '../../context/studyContext.jsx';
 export default function StudySets() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const { ChangeStudyData, studySets } = useStudy();
+    const { getVocabularyData, studySets } = useStudy();
 
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');
@@ -45,13 +45,13 @@ export default function StudySets() {
 
     const handleStudyClick = async (set) => {
         // navigate to study mode
-        await ChangeStudyData(set);
+        await getVocabularyData(set);
         navigate(`/StudySets/study/${set._id}`);
     };
 
     const handleQuizClick = async (set) => {
         // navigate to quiz mode
-        await ChangeStudyData(set);
+        await getVocabularyData(set);
         navigate(`/StudySets/quiz/${set._id}`);
     };
 

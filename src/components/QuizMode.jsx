@@ -15,26 +15,7 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
     const [tuluanAnswered, setTuluanAnswered] = useState(false); // tuluan
     const [selectedOption, setSelectedOption] = useState(null); // tracnghiem
     const [tracnghiemAnswered, setTracnghiemAnswered] = useState(false); // tracnghiem
-
     const currentCard = cards?.[currentCardIndex];
-
-    // Generate 4 options for tracnghiem: correct word + 3 random others
-    const generateTracnghiemOptions = () => {
-        if (!cards?.length || !currentCard?.word) {
-            return [];
-        }
-        const correctWord = currentCard.word;
-        const otherWords = cards
-            .filter((_, index) => index !== currentCardIndex && cards[index]?.word)
-            .slice(0, 20) // safety limit
-            .map(c => c.word);
-        const shuffledOthers = otherWords.sort(() => Math.random() - 0.5).slice(0, 3);
-        const options = [correctWord, ...shuffledOthers].sort(() => Math.random() - 0.5);
-        console.log('[QUIZMODE DEBUG] Options generated:', options);
-        return options;
-    };
-
-    const options = generateTracnghiemOptions();
 
     const checkTuluanAnswer = () => {
         console.log('[QUIZMODE DEBUG] checkTuluanAnswer');
@@ -53,14 +34,14 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
     };
 
     const handleTracnghiemSelect = (optionIndex) => {
-        console.log('[QUIZMODE DEBUG] handleTracnghiemSelect:', optionIndex);
-        if (!currentCard?.word) {
+        console.log(optionIndex);
+        if (!currentCard?.en) {
             console.error('[QUIZMODE DEBUG] No currentCard.word for tracnghiem');
             return;
         }
         setSelectedOption(optionIndex);
-        setTracnghiemAnswered(true);
-        if (options[optionIndex] === currentCard.word) {
+        // setTracnghiemAnswered(true);
+        if (options[optionIndex] === currentCard.en) {
             setScore(score + 1);
         }
     };
@@ -165,10 +146,27 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
         return <div className="text-center py-16"><p className="text-lg text-muted-foreground">Không có thẻ để chơi quiz hoặc lỗi trạng thái</p></div>;
     }
 
+    // Generate 4 options for tracnghiem: correct word + 3 random others
+    const generateTracnghiemOptions = () => {
+        if (!cards?.length || !currentCard?.en) {
+            return [];
+        }
+        const correctWord = currentCard.en;
+        const otherWords = cards
+            .filter((_, index) => index !== currentCardIndex && cards[index]?.en)
+            .slice(0, 20) // safety limit
+            .map(c => c.en);
+        const options = [correctWord, ...otherWords].sort(() => Math.random() - 0.5);
+        return options;
+    };
+
+    const options = generateTracnghiemOptions();
     const progress = ((currentCardIndex + 1) / cards.length) * 100;
     const answered = mode === 'tuluan' ? tuluanAnswered : tracnghiemAnswered;
-    const correctIndex = options.findIndex(opt => opt === currentCard.word);
-    const isCorrect = mode === 'tuluan' ? (userAnswer.trim().toLowerCase() === currentCard.word.trim().toLowerCase()) : (selectedOption === correctIndex);
+    const correctIndex = options.findIndex(opt => opt === currentCard.en);
+
+    console.log(selectedOption, correctIndex);
+    const isCorrect = mode === 'tuluan' ? (userAnswer.trim().toLowerCase() === currentCard.en.trim().toLowerCase()) : (selectedOption === correctIndex);
 
     return (
         <div className="max-w-2xl mx-auto p-6">
@@ -184,10 +182,10 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
             {/* Question Card */}
             <div className="bg-white rounded-2xl border-2 border-border p-8 mb-8 shadow-sm">
                 <div className="text-center mb-12">
-                    <h3 className="text-3xl md:text-4xl font-bold text-primary-600 mb-4 tracking-wide">
-                        {currentCard.meaning}
-                    </h3>
                     <p className="text-sm text-muted-foreground">Câu {currentCardIndex + 1}</p>
+                    <h3 className="text-3xl md:text-4xl font-bold text-primary-600 mb-4 tracking-wide">
+                        {currentCard.vn}
+                    </h3>
                 </div>
 
                 {mode === 'tuluan' ? (
@@ -282,7 +280,7 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
                                     </Button>
                                 </div>
                                 {!isCorrect && (
-                                    <p className="text-sm mt-2 text-danger font-medium">Đáp án đúng: <strong>{currentCard.word}</strong></p>
+                                    <p className="text-sm mt-2 text-danger font-medium">Đáp án đúng: <strong>{currentCard.en}</strong></p>
                                 )}
                             </div>
                         )}

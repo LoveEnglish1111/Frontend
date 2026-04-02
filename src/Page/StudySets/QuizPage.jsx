@@ -50,18 +50,18 @@ export default function QuizPage() {
             setLoading(true);
             setError(null);
             try {
-                const res = await axios.get(`${URL}/vocabulary/get?flashCard_id=${setId}`);
-                const apiCards = res.data?.Vocabulary || res.data || [];
-                setLocalCards(apiCards);
-                if (apiCards.length === 0) {
-                    console.log('Backend empty, using mock data');
-                    setLocalCards(mockCards);
-                }
+                // const res = await axios.get(`${URL}/vocabulary/get?flashCard_id=${setId}`);
+                // const apiCards = res.data?.Vocabulary || res.data || [];
+                // setLocalCards(apiCards);
+                // if (apiCards.length === 0) {
+                //     console.log('Backend empty, using mock data');
+                //     setLocalCards(mockCards);
+                // }
             } catch (err) {
-                console.error('Fetch error:', err);
-                console.log('Using mock data');
-                setLocalCards(mockCards);
-                setError(null);
+                // console.error('Fetch error:', err);
+                // console.log('Using mock data');
+                // setLocalCards(mockCards);
+                // setError(null);
             } finally {
                 setLoading(false);
             }
@@ -87,6 +87,8 @@ export default function QuizPage() {
         if (mode === 'tracnghiem') {
             setShuffledCards(shuffleArray(safeCards));
         }
+
+        console.log(safeCards);
         setQuizMode(mode);
     };
 

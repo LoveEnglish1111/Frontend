@@ -13,7 +13,9 @@ export default function CreateNewSet() {
     const [isCreating, setIsCreating] = useState(false);
     const [createError, setCreateError] = useState('');
     const {user} = useAuth();
-    const {createNewStudySets} = useStudy();
+    const {createNewStudySets, updateFlashCardData, updatestudyData, updateVocabularyData, getStudyData} = useStudy();
+    
+    const isModify = updateFlashCardData == null;
 
     const categories = [
         'All',
@@ -26,17 +28,17 @@ export default function CreateNewSet() {
     ];
     const WatchMode = ["Public", "Private"]
 
-    const [newSetData, setNewSetData] = useState({
+    const [newSetData, setNewSetData] = useState(updateFlashCardData == null ? {
         title: '',
         description: '',
         category: 'Vocabulary',
         visibility : "public"
-    });
+    } : updateFlashCardData.newSetData);
 
-    const [newCards, setNewCards] = useState([
+    const [newCards, setNewCards] = useState(updateFlashCardData == null ? [
         { en: '', vn: '' },
         { en: '', vn: '' },
-    ]);
+    ] : updateFlashCardData.newCards.Vocabulary);
 
     const handleCardChange = (index, field, value) => {
         setNewCards((prev) =>
@@ -78,7 +80,26 @@ export default function CreateNewSet() {
         setIsCreating(true);
         if (!validateNewSet()) return;
         setCreateError('');
-        await createNewStudySets(newSetData, newCards);
+
+        if (isModify) await createNewStudySets(newSetData, newCards);
+        else {
+            const total = newCards.length;
+            updateFlashCardData.newSetData = {...updateFlashCardData.newSetData,
+                title : newSetData.title,
+                description : newSetData.description,
+                category : newSetData.category,
+                visibility : newSetData.visibility,
+                total : total,
+            }
+
+            updateFlashCardData.newCards = {...updateFlashCardData.newCards,
+                Vocabulary : newCards,
+                MarkLearned : "0".repeat(total)
+            };
+            await updatestudyData(updateFlashCardData.newSetData);
+            await updateVocabularyData(updateFlashCardData.newCards);
+        }
+        getStudyData();
         setIsCreating(false);
         navigate("/");
     };

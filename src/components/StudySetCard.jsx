@@ -2,9 +2,11 @@ import { Play, Zap, Trash, Pen } from 'lucide-react';
 import Button from './Button';
 import ProgressBar from './ProgressBar';
 import { useStudy } from '../context/studyContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
-    const {deleteStudyData} = useStudy();
+    const navigate = useNavigate();
+    const {deleteStudyData, getUpdateFlashCardData} = useStudy();
     const categoryColors = {
         Grammar: 'from-blue-50 to-blue-100',
         Vocabulary: 'from-purple-50 to-purple-100',
@@ -28,6 +30,11 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
         await deleteStudyData(flashcard_id);
     }
 
+    async function handleUpdateFlashCard() {
+        await getUpdateFlashCardData(set);
+        navigate("/StudySets/CreateNewSet")
+    }
+
     const bgGradient =
         categoryColors[set.category] || 'from-slate-50 to-slate-100';
     const icon = categoryIcons[set.category] || '📝';
@@ -45,7 +52,7 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                 <h3 className="text-xl font-bold text-foreground mb-2 truncate w-full">
                     {set.title}
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground truncate w-full">
                     {set.description}
                 </p>
             </div>
@@ -129,10 +136,9 @@ export default function StudySetCard({ set, onStudyClick, onQuizClick }) {
                         <Trash/>
                     </Button>
 
-                    <Button className='cursor-pointer' variant='ghost'>
+                    <Button className='cursor-pointer' variant='ghost' onClick={handleUpdateFlashCard}>
                         <Pen/>
                     </Button>
-                    {/* Hello world */}
                 </div>
             </div>
         </div>
