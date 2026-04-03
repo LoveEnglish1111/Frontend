@@ -17,14 +17,6 @@ export default function QuizPage() {
     const [error, setError] = useState(null);
 
     const safeCards = vocabularyData?.Vocabulary || localCards || [];
-    console.log('[QUIZPAGE DEBUG] Render:', { 
-      setId, 
-      quizMode, 
-      cardsLength: safeCards.length, 
-      vocabularyData: !!vocabularyData?.Vocabulary?.length,
-      localCardsLength: localCards.length 
-    });
-
     useEffect(() => {
         const fetchCards = async () => {
             if (!setId) {
@@ -134,14 +126,24 @@ export default function QuizPage() {
                                     <span className="text-2xl mr-3">✍️</span>
                                     Essay
                                 </Button>
+
+                                <Button
+                                    variant="primary"
+                                    size="lg"
+                                    className="cursor-pointer w-full h-20 text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all group"
+                                    onClick={() => selectMode("matchgame")}
+                                >
+                                    <span className="text-2xl mr-3">🎮</span>
+                                    Match Game
+                                </Button>
                             </div>
                         </div>
                     </div>
                 ) : (
                     <ErrorBoundary>
-                        <QuizMode 
-                            mode={quizMode} 
-                            cards={quizMode === 'tracnghiem' ? shuffledCards : safeCards} 
+                        <QuizMode
+                            mode={quizMode}
+                            cards={quizMode === 'tracnghiem' ? shuffledCards : safeCards}
                             studySetId={setId}
                             onReset={resetMode}
                         />

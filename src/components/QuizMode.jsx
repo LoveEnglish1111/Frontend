@@ -4,6 +4,9 @@ import Button from './Button';
 import Input from './Input';
 import ProgressBar from './ProgressBar';
 import { useNavigate } from 'react-router-dom';
+import MatchQuestion from './Study/MatchQuestion';
+import Essay from './Study/Essay';
+import MultipleChoice from './Study/mutipleChoice';
 
 export default function QuizMode({ mode, cards, studySetId, onReset, onComplete }) {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -15,6 +18,7 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
     const [tuluanAnswered, setTuluanAnswered] = useState(false); // tuluan
     const [selectedOption, setSelectedOption] = useState(null); // tracnghiem
     const [tracnghiemAnswered, setTracnghiemAnswered] = useState(false); // tracnghiem
+    const [matchGameKey, setMatchGameKey] = useState(0); // Để ép React reset MatchGame
     const currentCard = cards?.[currentCardIndex];
 
     const generateTracnghiemOptions = () => {
@@ -84,6 +88,7 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
         setTuluanAnswered(false);
         setSelectedOption(null);
         setTracnghiemAnswered(false);
+        setMatchGameKey(prev => prev + 1); // Đổi key sẽ ép MatchQuestion render lại từ đầu
     };
 
     // Results modal (shared)
@@ -119,8 +124,8 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
                     <div className={`p-4 rounded-lg mt-6 ${percentage >= 80 ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'}`}>
                         <p className="font-semibold">
                             {percentage >= 90 ? '🎉 excellently ! You have mastered this vocabulary set!' :
-                             percentage >= 80 ? '👍 Good! Keep practicing!' :
-                             percentage >= 70 ? '📚 Pretty good! Let review and try again.' : '💪 Try your best! Practice more.'}
+                                percentage >= 80 ? '👍 Good! Keep practicing!' :
+                                    percentage >= 70 ? '📚 Pretty good! Let review and try again.' : '💪 Try your best! Practice more.'}
                         </p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-3 mt-8">
@@ -144,138 +149,72 @@ export default function QuizMode({ mode, cards, studySetId, onReset, onComplete 
     const answered = mode === 'tuluan' ? tuluanAnswered : tracnghiemAnswered;
     const correctIndex = options.findIndex(opt => opt === currentCard.en);
     const isCorrect = mode === 'tuluan' ? (userAnswer.trim().toLowerCase() === currentCard.en.trim().toLowerCase()) : (selectedOption === correctIndex);
-
     return (
-        <div className="max-w-2xl mx-auto p-6">
+        <div className="max-w-4xl mx-auto p-6">
             {/* Header */}
-            <div className="mb-6">
-                <div className="flex justify-between items-center mb-3">
-                    <h2 className="text-2xl font-bold text-foreground capitalize">{mode === 'tuluan' ? 'Eassy Mode' : 'Multiple Choice Mode'}</h2>
-                    <span className="text-sm font-semibold text-primary-600">{currentCardIndex + 1}/{cards.length}</span>
-                </div>
-                <ProgressBar current={currentCardIndex + 1} total={cards.length} color="primary" />
-            </div>
+            {mode !== "matchgame" ? (
+                <div className="mb-6">
+                    <div className="flex justify-between items-center mb-3">
+                        <h2 className="text-2xl font-bold text-foreground capitalize">{mode === 'tuluan' ? 'Eassy Mode' : mode === "matchgame" ? "Match Game" : "Multiple Choice Mode"}</h2>
 
-            {/* Question Card */}
-            <div className="bg-white rounded-2xl border-2 border-border p-8 mb-8 shadow-sm">
-                <div className="text-center mb-12">
-                    <p className="text-sm text-muted-foreground">Question: {currentCardIndex + 1}</p>
-                    <h3 className="text-3xl md:text-4xl font-bold text-primary-600 mb-4 tracking-wide">
-                        {currentCard.vn.toUpperCase()}
-                    </h3>
+                        <span className="text-sm font-semibold text-primary-600">{currentCardIndex + 1}/{cards.length}</span>
+                    </div>
+                    <ProgressBar current={currentCardIndex + 1} total={cards.length} color="primary" />
                 </div>
+            ) : <></>}
 
-                {mode === 'tuluan' ? (
-                    /* TULUAN MODE */
-                    <div className="space-y-6">
-                        <Input
-                            type="text"
-                            placeholder="Nhập từ tiếng Anh..."
-                            value={userAnswer}
-                            onChange={(e) => setUserAnswer(e.target.value)}
-                            disabled={tuluanAnswered}
-                            className="text-xl py-6"
-                            autoFocus
-                        />
-                        {tuluanAnswered && (
-                            <div className={`p-6 rounded-2xl transition-all ${isCorrect ? 'border-success border-2' : 'border-[#ef4444] border-2'}`}>
-                                {showTuluanAnswer ? (
-                                    <div className="text-center">
-                                        <div className="text-2xl font-bold mb-2">{currentCard.en}</div>
-                                        <p className="text-sm text-muted-foreground">ANSWERED</p>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <div className="flex items-center justify-center gap-2 mb-4">
-                                            <span className={`text-xl font-bold ${isCorrect ? 'text-success' : 'text-[#ef4444]'}`}>
-                                                {isCorrect ? '✅ Đúng!' : '❌ Sai!'}
-                                            </span>
-                                        </div>
-                                        <p className={`font-semibold ${isCorrect ? 'text-success' : 'text-[#ef4444]'}`}>
-                                            {isCorrect ? 'Tuyệt vời! Sang từ tiếp theo.' : 'Nhấn "Hiện đáp án" để xem.'}
-                                        </p>
-                                    </>
-                                )}
-                            </div>
+            {
+                mode === "matchgame" ?
+                    <MatchQuestion key={matchGameKey} cards={cards} onClick={handleRestart} /> :
+                    <div className="bg-white rounded-2xl border-2 border-border p-8 mb-8 shadow-sm">
+                        <div className="text-center mb-12">
+                            <p className="text-sm text-muted-foreground">Question: {currentCardIndex + 1}</p>
+                            <h3 className="text-3xl md:text-4xl font-bold text-primary-600 mb-4 tracking-wide">
+                                {currentCard.vn.toUpperCase()}
+                            </h3>
+                        </div>
+
+                        {mode === 'tuluan' ? (
+                            <Essay
+                                currentCard={currentCard}
+                                userAnswer={userAnswer}
+                                setUserAnswer={setUserAnswer}
+                                tuluanAnswered={tuluanAnswered}
+                                showTuluanAnswer={showTuluanAnswer}
+                                setShowTuluanAnswer={setShowTuluanAnswer}
+                                isCorrect={isCorrect}
+                                checkTuluanAnswer={checkTuluanAnswer}
+                                handleNext={handleNext}
+                            />
+                        ) : (
+                            <MultipleChoice
+                                currentCard={currentCard}
+                                options={options}
+                                selectedOption={selectedOption}
+                                tracnghiemAnswered={tracnghiemAnswered}
+                                correctIndex={correctIndex}
+                                isCorrect={isCorrect}
+                                handleTracnghiemSelect={handleTracnghiemSelect}
+                            />
                         )}
-                        {tuluanAnswered && (
-                            <div className="flex gap-3 pt-4">
-                                <Button 
-                                    variant="outline" 
-                                    onClick={() => setShowTuluanAnswer(!showTuluanAnswer)}
-                                    className="flex-1 cursor-pointer"
+
+                        {/* Navigation */}
+                        {!showResults && mode == "tracnghiem" && answered && (
+                            <div className="flex justify-between mt-8 pt-6 border-t border-border">
+                                <p></p>
+                                <Button
+                                    variant="primary"
+                                    onClick={handleNext}
+                                    className="flex items-center gap-2 cursor-pointer"
+                                    disabled={false}
                                 >
-                                    {showTuluanAnswer ? 'Từ tiếp theo' : 'Hiện đáp án'}
-                                </Button>
-                                <Button variant="primary" onClick={handleNext} className="flex-1 cursor-pointer">
-                                    Next
+                                    {currentCardIndex === cards.length - 1 ? 'Result' : 'Next'}
+                                    {currentCardIndex < cards.length - 1 && <ChevronRight size={16} />}
                                 </Button>
                             </div>
                         )}
-                        {!tuluanAnswered && (
-                            <Button variant="primary" onClick={checkTuluanAnswer} className="w-full cursor-pointer">
-                                <Edit3 size={20} className="mr-2" />
-                                Check
-                            </Button>
-                        )}
                     </div>
-                ) : (
-                    /* TRACNGHIEM MODE */
-                    <div className="space-y-4">
-                        {options.map((option, index) => {
-                            const isSelected = selectedOption === index;
-                            const isCorrectOpt = index === correctIndex;
-                            let style = 'group hover:border-primary-600 border-2 border-border bg-white cursor-pointer p-5 rounded-xl transition-all font-medium h-20 flex items-center';
-                            if (tracnghiemAnswered) {
-                                if (isCorrectOpt) {
-                                    style += ' bg-success/10 border-success text-success shadow-md';
-                                } else if (isSelected) {
-                                    style += ' bg-danger/10 border-danger text-danger shadow-md';
-                                }
-                            }
-                            return (
-                                <button
-                                    key={index}
-                                    onClick={() => !tracnghiemAnswered && handleTracnghiemSelect(index)}
-                                    disabled={tracnghiemAnswered}
-                                    className={style}
-                                >
-                                    <span className="w-8 font-bold text-lg mr-4">{String.fromCharCode(65 + index)}.</span>
-                                    <span>{option.toUpperCase()}</span>
-                                </button>
-                            );
-                        })}
-                        {tracnghiemAnswered && (
-                            <div className={`p-5 rounded-xl mt-4 ${isCorrect ? 'border-success border' : 'border-[#ef4444] border'}`}>
-                                <div className="flex items-center justify-between">
-                                    <span className={`font-bold text-lg ${isCorrect ? 'text-success' : 'text-[#ef4444]'}`}>
-                                        {isCorrect ? '✅ Correct!' : '❌ Incorrect!'}
-                                    </span>
-                                </div>
-                                {!isCorrect && (
-                                    <p className="text-[16px] mt-2 text-[#ef4444] font-medium">Answered: <strong>{currentCard.en.toUpperCase()}</strong></p>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                {/* Navigation */}
-                {!showResults && mode == "tracnghiem" && answered && (
-                    <div className="flex justify-between mt-8 pt-6 border-t border-border">
-                        <p></p>
-                        <Button
-                            variant="primary"
-                            onClick={handleNext}
-                            className="flex items-center gap-2 cursor-pointer"
-                            disabled={false}
-                        >
-                            {currentCardIndex === cards.length - 1 ? 'Result' : 'Next'}
-                            {currentCardIndex < cards.length - 1 && <ChevronRight size={16} />}
-                        </Button>
-                    </div>
-                )}
-            </div>
+            }
         </div>
     );
 }

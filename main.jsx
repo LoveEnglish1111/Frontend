@@ -26,6 +26,8 @@ import Home from './src/Page/Home.jsx';
 import Community from './src/Page/Community.jsx';
 import AdminPanel from './src/Page/AdminPanel.jsx';
 
+import TestComponent from './src/Page/TestComponent.jsx';
+
 // Study Page
 import { StudyProvider } from './src/context/studyContext.jsx';
 
@@ -47,6 +49,8 @@ createRoot(document.getElementById('root')).render(
                                 path="/VerifyEmail"
                                 element={<VerifyEmail />}
                             />
+
+                            <Route path='/test' element={<TestComponent />} />
 
                             {/* Protected Routes */}
                             <Route
